@@ -446,6 +446,42 @@
     .words-group .mini-button { margin: 16px 0 10px; }
 
     .previewing .app { pointer-events: none; }
+
+    /* What to show */
+    .tile-grid.audience-grid { grid-template-columns: 1fr 1fr; max-width: 520px; }
+    .big-choice { flex-direction: column; gap: 4px; min-height: 120px; font-size: 18px; }
+    .big-choice small { font-size: 12px; font-weight: normal; color: #666; }
+    .big-emoji { font-size: 34px; }
+
+    .show-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      width: 100%;
+      margin-top: 8px;
+      padding: 14px 16px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      background: white;
+      color: #222;
+      font-size: 16px;
+      text-align: left;
+      cursor: pointer;
+    }
+    .switch {
+      flex: 0 0 auto;
+      min-width: 92px;
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      text-align: center;
+      background: #e9f8ed;
+      color: #176b2c;
+    }
+    .show-row.off .switch { background: #eee; color: #777; }
+    .show-row.off .show-label { opacity: 0.6; }
     .choice-button.no-desc .choice-description { display: none; }
 
     .sub-box {
@@ -733,7 +769,7 @@
 
       <div id="searchResults"></div>
 
-      <button class="secondary-button" onclick="startRegistrationFromSearch()" data-t="memRegisterButton">
+      <button class="secondary-button" id="searchRegisterButton" onclick="startRegistrationFromSearch()" data-t="memRegisterButton">
         Can't find your name? Register as new attendee
       </button>
     </div>
@@ -800,8 +836,24 @@
         <label for="adminWelcome">Welcome Message</label>
         <textarea id="adminWelcome" maxlength="300" style="min-height: 70px;"></textarea>
 
+        <!-- 2. WHAT TO SHOW -->
+        <div class="step-title"><span class="step-number">2</span> What to show</div>
+        <div class="step-help">Is this event for everyone, or for members only?</div>
+
+        <div class="tile-grid audience-grid" id="audienceGrid">
+          <button type="button" class="tile big-choice" data-audience="all">
+            <span class="big-emoji">👥</span>Everyone<small>Members and new people</small>
+          </button>
+          <button type="button" class="tile big-choice" data-audience="members">
+            <span class="big-emoji">👤</span>Members only<small>New people cannot register</small>
+          </button>
+        </div>
+
+        <label>Or turn each part on or off</label>
+        <div id="showList"></div>
+
         <!-- 2. ICON -->
-        <div class="step-title"><span class="step-number">2</span> Icon at the top</div>
+        <div class="step-title"><span class="step-number">3</span> Icon at the top</div>
         <div class="step-help">Tap a picture, or use your own logo.</div>
 
         <div class="tile-grid emoji-grid" id="iconGrid"></div>
@@ -815,7 +867,7 @@
         </div>
 
         <!-- 3. CARD -->
-        <div class="step-title"><span class="step-number">3</span> Welcome card color</div>
+        <div class="step-title"><span class="step-number">4</span> Welcome card color</div>
         <div class="step-help">This is the box with the event name and buttons.</div>
 
         <div class="tile-grid" id="cardColorGrid"></div>
@@ -829,7 +881,7 @@
         <div class="tile-grid text-grid" id="textColorGrid"></div>
 
         <!-- 4. CARD PHOTO -->
-        <div class="step-title"><span class="step-number">4</span> Photo inside the card (optional)</div>
+        <div class="step-title"><span class="step-number">5</span> Photo inside the card (optional)</div>
 
         <div class="photo-row">
           <label class="photo-button">
@@ -850,13 +902,13 @@
         </div>
 
         <!-- 5. FONT -->
-        <div class="step-title"><span class="step-number">5</span> Title font</div>
+        <div class="step-title"><span class="step-number">6</span> Title font</div>
         <div class="step-help">Changes the style of the event name.</div>
 
         <div class="tile-grid font-grid" id="fontGrid"></div>
 
         <!-- 6. HOME SCREEN BUTTONS -->
-        <div class="step-title"><span class="step-number">6</span> Home screen buttons</div>
+        <div class="step-title"><span class="step-number">7</span> Home screen buttons</div>
         <div class="step-help">The two big buttons people tap first.</div>
 
         <div class="sub-box">
@@ -918,7 +970,7 @@
         <div class="tile-grid font-grid" id="btnFontGrid"></div>
 
         <!-- 6. PAGE BACKGROUND -->
-        <div class="step-title"><span class="step-number">7</span> Page background (behind the card)</div>
+        <div class="step-title"><span class="step-number">8</span> Page background (behind the card)</div>
 
         <div class="swatches" id="swatches"></div>
 
@@ -951,7 +1003,7 @@
         </details>
 
         <!-- 7. BUTTONS -->
-        <div class="step-title"><span class="step-number">8</span> Color of the other buttons</div>
+        <div class="step-title"><span class="step-number">9</span> Color of the other buttons</div>
         <div class="step-help">Buttons like CONTINUE, REGISTER and SAVE.</div>
 
         <div class="tile-grid text-grid" id="accentGrid"></div>
@@ -962,7 +1014,7 @@
         </div>
 
         <!-- 9. LAYOUT -->
-        <div class="step-title"><span class="step-number">9</span> Layout &amp; alignment</div>
+        <div class="step-title"><span class="step-number">10</span> Layout &amp; alignment</div>
 
         <label>Where the card sits on the screen</label>
         <div class="pos-grid" id="posGrid"></div>
@@ -977,7 +1029,7 @@
         <div class="tile-grid text-grid" id="buttonAlignGrid"></div>
 
         <!-- 10. WORDS -->
-        <div class="step-title"><span class="step-number">10</span> Words on every page</div>
+        <div class="step-title"><span class="step-number">11</span> Words on every page</div>
         <div class="step-help">Tap a page to open it. Change any words you like. Leave a box empty to use the original words.</div>
 
         <div id="wordsGroups"></div>
@@ -1071,7 +1123,12 @@
     textAlign: 'center',
     buttonAlign: 'left',
     cardWidth: 'normal',
-    pageTexts: {}
+    pageTexts: {},
+    showWelcome: true,
+    showNewButton: true,
+    showMemberButton: true,
+    showSearchRegister: true,
+    showPresentBadge: true
   };
 
   try {
@@ -1243,6 +1300,7 @@
         ['memHint',           'Text before typing',               'Start typing — matching names will appear here.'],
         ['memFoundText',      'Text after the number of names found', 'Tap your name to check in'],
         ['memNotFound',       'When no name matches',             'No matching name. Check the spelling, or register below if this is your first time.'],
+        ['memNotFoundClosed', 'When no name matches (members-only event)', 'No matching name. Please check the spelling, or ask an usher for help.'],
         ['memPresentBadge',   'Tag for people already checked in', '✓ Present'],
         ['memRegisterButton', 'Bottom button',                    "Can't find your name? Register as new attendee"]
       ]
@@ -1291,6 +1349,21 @@
     var source = (draft && document.documentElement.classList.contains('editing')) ? draft : SETTINGS;
     var custom = (source && source.pageTexts) || {};
     return custom[key] || DEFAULT_TEXTS[key] || '';
+  }
+
+  /** Is this part shown? (missing = shown) */
+  function isShown(source, key) {
+    return !source || source[key] !== false;
+  }
+
+  /** Settings currently on screen (the draft while editing). */
+  function current() {
+    return (draft && document.documentElement.classList.contains('editing')) ? draft : SETTINGS;
+  }
+
+  function registrationOpen(source) {
+    source = source || current();
+    return isShown(source, 'showNewButton') || isShown(source, 'showSearchRegister');
   }
 
   function applyTexts() {
@@ -1504,6 +1577,12 @@
     // ---- Words on every page ----
     applyTexts();
 
+    // ---- Show / hide parts ----
+    $('welcomeText').classList.toggle('hidden', !isShown(s, 'showWelcome') || !s.welcomeMessage);
+    $('newChoice').classList.toggle('hidden', !isShown(s, 'showNewButton'));
+    $('memberChoice').classList.toggle('hidden', !isShown(s, 'showMemberButton'));
+    $('searchRegisterButton').classList.toggle('hidden', !isShown(s, 'showSearchRegister'));
+
     // ---- Home screen buttons ----
     applyChoice('new', s.newTitle || 'NEW ATTENDEE', s.newDesc, s.newIcon || '🆕');
     applyChoice('member', s.memberTitle || 'MEMBERS', s.memberDesc, s.memberIcon || '👤');
@@ -1713,7 +1792,7 @@
         '<span class="person-name">' +
           (term ? highlightName(person.fullName, term) : escapeHtml(person.fullName)) +
         '</span>' +
-        (person.present ? '<span class="badge">' + escapeHtml(T('memPresentBadge')) + '</span>' : '') +
+        (person.present && isShown(current(), 'showPresentBadge') ? '<span class="badge">' + escapeHtml(T('memPresentBadge')) + '</span>' : '') +
         '<span class="arrow">›</span>' +
       '</button>'
     );
@@ -1755,7 +1834,8 @@
 
     if (result.total === 0) {
       box.innerHTML =
-        '<div class="message warning">' + escapeHtml(T('memNotFound')) + '</div>';
+        '<div class="message warning">' +
+        escapeHtml(T(isShown(current(), 'showSearchRegister') ? 'memNotFound' : 'memNotFoundClosed')) + '</div>';
       return;
     }
 
@@ -1779,6 +1859,7 @@
   // =========================================
 
   function showNewAttendee() {
+    if (!isShown(SETTINGS, 'showNewButton')) return;
     stopAutoReturn();
     clearForms();
     showScreen('newNameScreen');
@@ -1865,6 +1946,7 @@
   }
 
   function continueAsNew() {
+    if (!registrationOpen(SETTINGS)) return;
     var name = matchContext ? matchContext.newName : '';
     goToRegistration(name);
   }
@@ -1882,6 +1964,7 @@
   }
 
   function startRegistrationFromSearch() {
+    if (!registrationOpen(SETTINGS)) return;
     // Read the search box BEFORE clearing the forms.
     goToRegistration($('searchInput').value.trim());
   }
@@ -2116,6 +2199,7 @@
 
     renderFontTiles();
     setupLayoutAndWords();
+    setupShowList();
 
     // ---- one click handler for all tiles ----
     $('adminForm').addEventListener('click', function(e) {
@@ -2264,6 +2348,7 @@
   }
 
   function markSelected() {
+    markShowList();
     function mark(gridId, attr, value) {
       $(gridId).querySelectorAll('[' + attr + ']').forEach(function(el) {
         el.classList.toggle('selected', String(el.getAttribute(attr)).toLowerCase() === String(value).toLowerCase());
@@ -2460,7 +2545,64 @@
   }
 
 
-  // ---- Step 9 & 10: layout and words ----
+
+  // ---- Step 2: what to show ----
+
+  var SHOW_PARTS = [
+    ['showWelcome',        'Welcome message on the home screen'],
+    ['showNewButton',      'New attendee button (home screen)'],
+    ['showMemberButton',   'Members button (home screen)'],
+    ['showSearchRegister', '"Register as new attendee" button on the members page'],
+    ['showPresentBadge',   '"Present" tag next to names already checked in']
+  ];
+
+  function setupShowList() {
+    $('showList').innerHTML = SHOW_PARTS.map(function(part) {
+      return '<button type="button" class="show-row" data-show="' + part[0] + '">' +
+        '<span class="show-label">' + escapeHtml(part[1]) + '</span>' +
+        '<span class="switch"></span></button>';
+    }).join('');
+
+    $('showList').addEventListener('click', function(e) {
+      var row = e.target.closest('[data-show]');
+      if (!row || !draft) return;
+      var key = row.getAttribute('data-show');
+      draft[key] = !isShown(draft, key);
+
+      if (!isShown(draft, 'showNewButton') && !isShown(draft, 'showMemberButton')) {
+        draft[key] = true;
+        showMessage('adminMessage', 'At least one home screen button must be shown.', 'warning');
+      }
+      refreshAdminPreview();
+    });
+
+    $('audienceGrid').addEventListener('click', function(e) {
+      var t = e.target.closest('[data-audience]');
+      if (!t || !draft) return;
+      var everyone = t.getAttribute('data-audience') === 'all';
+      draft.showNewButton = everyone;
+      draft.showSearchRegister = everyone;
+      draft.showMemberButton = true;
+      refreshAdminPreview();
+    });
+  }
+
+  function markShowList() {
+    document.querySelectorAll('#showList [data-show]').forEach(function(row) {
+      var on = isShown(draft, row.getAttribute('data-show'));
+      row.classList.toggle('off', !on);
+      row.querySelector('.switch').textContent = on ? '✓ Shown' : 'Hidden';
+    });
+
+    var everyone = isShown(draft, 'showNewButton') && isShown(draft, 'showSearchRegister');
+    var membersOnly = !isShown(draft, 'showNewButton') && !isShown(draft, 'showSearchRegister');
+    document.querySelectorAll('#audienceGrid [data-audience]').forEach(function(t) {
+      var a = t.getAttribute('data-audience');
+      t.classList.toggle('selected', (a === 'all' && everyone) || (a === 'members' && membersOnly));
+    });
+  }
+
+  // ---- Step 10 & 11: layout and words ----
 
   function setupLayoutAndWords() {
     var posHtml = '';
@@ -2605,7 +2747,7 @@
     }
 
     if (!String(draft.newTitle || '').trim() || !String(draft.memberTitle || '').trim()) {
-      showMessage('adminMessage', 'Please type a title for both home screen buttons (step 6).', 'error');
+      showMessage('adminMessage', 'Please type a title for both home screen buttons (step 7).', 'error');
       return;
     }
 
