@@ -415,6 +415,37 @@
     .choice-button:hover { background: var(--choice-bg, var(--tile-bg)); filter: brightness(0.95); }
     .choice-title { font-family: var(--choice-font, Arial, Helvetica, sans-serif); }
     .choice-button.no-icon .choice-description { margin-left: 0; }
+
+    /* Alignment */
+    .container { max-width: var(--card-width, 650px); }
+    .container h1, .container .subtitle, .container .logo,
+    .container .confirmation, .container h2 { text-align: var(--text-align, center); }
+    #adminScreen h1, #adminScreen .subtitle { text-align: center; }
+    .btn-align-center .choice-button { text-align: center; }
+    .btn-align-right .choice-button { text-align: right; }
+    .btn-align-center .choice-description,
+    .btn-align-right .choice-description { margin-left: 0; }
+    .btn-align-right .choice-icon { margin-right: 0; margin-left: 12px; float: right; }
+
+    .pos-grid { display: grid; grid-template-columns: repeat(3, 70px); gap: 8px; margin-top: 10px; }
+    .pos-grid .tile { min-height: 54px; padding: 6px; }
+    .pos-dot { width: 26px; height: 18px; border-radius: 4px; background: #555; }
+    .align-tile .lines { display: flex; flex-direction: column; gap: 4px; width: 46px; }
+    .align-tile .lines span { height: 4px; background: #555; border-radius: 2px; }
+    .align-tile .lines span:nth-child(2) { width: 70%; }
+    .align-tile .lines span:nth-child(3) { width: 85%; }
+    .align-tile.left .lines { align-items: flex-start; }
+    .align-tile.center .lines { align-items: center; }
+    .align-tile.right .lines { align-items: flex-end; }
+    .align-tile .lines span:first-child { width: 100%; }
+
+    .words-group { margin-top: 12px; border-radius: 12px; background: rgba(128,128,128,0.10); padding: 4px 14px; }
+    .words-group summary { cursor: pointer; font-size: 17px; font-weight: bold; padding: 12px 0; }
+    .words-group label { font-size: 14px; }
+    .words-group input { padding: 11px; font-size: 16px; }
+    .words-group .mini-button { margin: 16px 0 10px; }
+
+    .previewing .app { pointer-events: none; }
     .choice-button.no-desc .choice-description { display: none; }
 
     .sub-box {
@@ -634,19 +665,20 @@
     <!-- ===================================== -->
     <!-- NEW ATTENDEE NAME CHECK -->
     <!-- ===================================== -->
+    <!-- data-t="key" = words that can be changed in Event Settings -->
     <div id="newNameScreen" class="screen">
 
-      <button class="back-button" onclick="showHome()">← Back</button>
+      <button class="back-button" onclick="showHome()" data-t="backButton">← Back</button>
 
-      <h1>New Attendee</h1>
-      <div class="subtitle">Let's first check if you're already registered.</div>
+      <h1 data-t="newPageTitle">New Attendee</h1>
+      <div class="subtitle" data-t="newPageSubtitle">Let's first check if you're already registered.</div>
 
-      <label for="newNameCheck">Your Full Name <span class="required">*</span></label>
-      <input type="text" id="newNameCheck" placeholder="Enter your full name" autocomplete="off">
+      <label for="newNameCheck"><span data-t="newNameLabel">Your Full Name</span> <span class="required">*</span></label>
+      <input type="text" id="newNameCheck" data-ph="newNamePlaceholder" placeholder="Enter your full name" autocomplete="off">
 
       <div id="newNameSuggestions"></div>
 
-      <button class="primary-button" id="checkNewNameButton" onclick="checkNewAttendeeName()">
+      <button class="primary-button" id="checkNewNameButton" onclick="checkNewAttendeeName()" data-t="newContinueButton">
         CONTINUE
       </button>
 
@@ -659,24 +691,24 @@
     <!-- ===================================== -->
     <div id="registrationScreen" class="screen">
 
-      <button class="back-button" onclick="showHome()">← Back</button>
+      <button class="back-button" onclick="showHome()" data-t="backButton">← Back</button>
 
-      <h1>Registration</h1>
-      <div class="subtitle">Please provide your details below.</div>
+      <h1 data-t="regTitle">Registration</h1>
+      <div class="subtitle" data-t="regSubtitle">Please provide your details below.</div>
 
-      <label for="fullName">Full Name <span class="required">*</span></label>
-      <input type="text" id="fullName" placeholder="Enter your full name" autocomplete="name">
+      <label for="fullName"><span data-t="regNameLabel">Full Name</span> <span class="required">*</span></label>
+      <input type="text" id="fullName" data-ph="regNamePlaceholder" placeholder="Enter your full name" autocomplete="name">
 
-      <label for="contact">Contact Number <span class="required">*</span></label>
-      <input type="tel" id="contact" placeholder="e.g. 09171234567" autocomplete="tel" inputmode="tel">
+      <label for="contact"><span data-t="regContactLabel">Contact Number</span> <span class="required">*</span></label>
+      <input type="tel" id="contact" data-ph="regContactPlaceholder" placeholder="e.g. 09171234567" autocomplete="tel" inputmode="tel">
 
-      <label for="address">Address <span class="required">*</span></label>
-      <textarea id="address" placeholder="Enter your complete address"></textarea>
+      <label for="address"><span data-t="regAddressLabel">Address</span> <span class="required">*</span></label>
+      <textarea id="address" data-ph="regAddressPlaceholder" placeholder="Enter your complete address"></textarea>
 
-      <label for="invitedBy">Who Invited You? <span class="required">*</span></label>
-      <input type="text" id="invitedBy" placeholder="Enter the name of the person who invited you">
+      <label for="invitedBy"><span data-t="regInvitedLabel">Who Invited You?</span> <span class="required">*</span></label>
+      <input type="text" id="invitedBy" data-ph="regInvitedPlaceholder" placeholder="Enter the name of the person who invited you">
 
-      <button class="primary-button" id="registerButton" onclick="submitRegistration()">
+      <button class="primary-button" id="registerButton" onclick="submitRegistration()" data-t="regButton">
         REGISTER &amp; CHECK IN
       </button>
 
@@ -689,19 +721,19 @@
     <!-- ===================================== -->
     <div id="searchScreen" class="screen">
 
-      <button class="back-button" onclick="showHome()">← Back</button>
+      <button class="back-button" onclick="showHome()" data-t="backButton">← Back</button>
 
-      <h1>Welcome Back!</h1>
-      <div class="subtitle">Start typing your name, then tap it to check in.</div>
+      <h1 data-t="memTitle">Welcome Back!</h1>
+      <div class="subtitle" data-t="memSubtitle">Start typing your name, then tap it to check in.</div>
 
       <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Type your first or last name" autocomplete="off">
+        <input type="text" id="searchInput" data-ph="memPlaceholder" placeholder="Type your first or last name" autocomplete="off">
         <span class="search-icon">🔍</span>
       </div>
 
       <div id="searchResults"></div>
 
-      <button class="secondary-button" onclick="startRegistrationFromSearch()">
+      <button class="secondary-button" onclick="startRegistrationFromSearch()" data-t="memRegisterButton">
         Can't find your name? Register as new attendee
       </button>
     </div>
@@ -714,18 +746,18 @@
 
       <div class="confirmation" style="padding-bottom: 0;">
         <div class="confirmation-icon">👋</div>
-        <h2 id="matchTitle">You're Already Registered!</h2>
+        <h2 id="matchTitle">Is this you?</h2>
         <p id="matchText">Tap your name to check in.</p>
       </div>
 
       <div id="matchList"></div>
       <div id="matchMessage"></div>
 
-      <button class="primary-button hidden" id="matchNewButton" onclick="continueAsNew()">
+      <button class="primary-button hidden" id="matchNewButton" onclick="continueAsNew()" data-t="matchNewButton">
         NONE OF THESE — I'M NEW
       </button>
 
-      <button class="secondary-button" onclick="showHome()">CANCEL</button>
+      <button class="secondary-button" onclick="showHome()" data-t="cancelButton">CANCEL</button>
     </div>
 
 
@@ -742,7 +774,7 @@
         <div id="confirmationMessage" class="message success">Thank you for attending!</div>
       </div>
 
-      <button class="primary-button" onclick="showHome()">DONE</button>
+      <button class="primary-button" onclick="showHome()" data-t="doneButton">DONE</button>
       <div class="auto-return" id="autoReturn"></div>
     </div>
 
@@ -929,6 +961,27 @@
           <span class="small-note">Other color</span>
         </div>
 
+        <!-- 9. LAYOUT -->
+        <div class="step-title"><span class="step-number">9</span> Layout &amp; alignment</div>
+
+        <label>Where the card sits on the screen</label>
+        <div class="pos-grid" id="posGrid"></div>
+
+        <label>Card size</label>
+        <div class="tile-grid text-grid" id="widthGrid"></div>
+
+        <label>Title and welcome text</label>
+        <div class="tile-grid text-grid" id="textAlignGrid"></div>
+
+        <label>Words inside the two home buttons</label>
+        <div class="tile-grid text-grid" id="buttonAlignGrid"></div>
+
+        <!-- 10. WORDS -->
+        <div class="step-title"><span class="step-number">10</span> Words on every page</div>
+        <div class="step-help">Tap a page to open it. Change any words you like. Leave a box empty to use the original words.</div>
+
+        <div id="wordsGroups"></div>
+
         <!-- ACTIONS -->
         <div class="action-buttons">
           <button class="secondary-button big" type="button" onclick="previewHome()">👀 PREVIEW</button>
@@ -1013,7 +1066,12 @@
     buttonTextColor: '',
     buttonImage: '',
     buttonFade: 60,
-    buttonFont: 'Default'
+    buttonFont: 'Default',
+    cardPosition: 'center-center',
+    textAlign: 'center',
+    buttonAlign: 'left',
+    cardWidth: 'normal',
+    pageTexts: {}
   };
 
   try {
@@ -1137,8 +1195,112 @@
     buttonTextColor: '',
     buttonImage: '',
     buttonFade: 60,
-    buttonFont: 'Default'
+    buttonFont: 'Default',
+    cardPosition: 'center-center',
+    textAlign: 'center',
+    buttonAlign: 'left',
+    cardWidth: 'normal'
   };
+
+  // =========================================
+  // WORDS ON EVERY PAGE (editable in Event Settings, step 10)
+  // =========================================
+
+  var TEXT_GROUPS = [
+    {
+      page: 'New attendee page', screen: 'newNameScreen', icon: '🆕',
+      items: [
+        ['newPageTitle',       'Big title',                   'New Attendee'],
+        ['newPageSubtitle',    'Small text under the title',  "Let's first check if you're already registered."],
+        ['newNameLabel',       'Name box label',              'Your Full Name'],
+        ['newNamePlaceholder', 'Grey hint inside the name box', 'Enter your full name'],
+        ['newSuggestTitle',    'Text above suggested names',  'Already registered? Tap your name to check in:'],
+        ['newContinueButton',  'Button',                      'CONTINUE']
+      ]
+    },
+    {
+      page: 'Registration form', screen: 'registrationScreen', icon: '📝',
+      items: [
+        ['regTitle',              'Big title',                  'Registration'],
+        ['regSubtitle',           'Small text under the title', 'Please provide your details below.'],
+        ['regNameLabel',          'Name box label',             'Full Name'],
+        ['regNamePlaceholder',    'Grey hint in name box',      'Enter your full name'],
+        ['regContactLabel',       'Contact box label',          'Contact Number'],
+        ['regContactPlaceholder', 'Grey hint in contact box',   'e.g. 09171234567'],
+        ['regAddressLabel',       'Address box label',          'Address'],
+        ['regAddressPlaceholder', 'Grey hint in address box',   'Enter your complete address'],
+        ['regInvitedLabel',       'Invited-by box label',       'Who Invited You?'],
+        ['regInvitedPlaceholder', 'Grey hint in invited-by box', 'Enter the name of the person who invited you'],
+        ['regButton',             'Button',                     'REGISTER & CHECK IN']
+      ]
+    },
+    {
+      page: 'Members search page', screen: 'searchScreen', icon: '🔍',
+      items: [
+        ['memTitle',          'Big title',                        'Welcome Back!'],
+        ['memSubtitle',       'Small text under the title',       'Start typing your name, then tap it to check in.'],
+        ['memPlaceholder',    'Grey hint inside the search box',  'Type your first or last name'],
+        ['memHint',           'Text before typing',               'Start typing — matching names will appear here.'],
+        ['memFoundText',      'Text after the number of names found', 'Tap your name to check in'],
+        ['memNotFound',       'When no name matches',             'No matching name. Check the spelling, or register below if this is your first time.'],
+        ['memPresentBadge',   'Tag for people already checked in', '✓ Present'],
+        ['memRegisterButton', 'Bottom button',                    "Can't find your name? Register as new attendee"]
+      ]
+    },
+    {
+      page: '"Is this you?" page', screen: 'matchScreen', icon: '🤔',
+      items: [
+        ['matchTitle',        'Title (similar name found)',   'Is this you?'],
+        ['matchText',         'Text (similar name found)',    "We found a similar name in our list. If it's you, tap it to check in."],
+        ['matchNewButton',    'Button for new people',        "NONE OF THESE — I'M NEW"],
+        ['alreadyRegTitle',   'Title (already registered)',   "You're Already Registered!"],
+        ['alreadyRegText',    'Text (same name)',             'This name is already in our list. Tap it to check in.'],
+        ['alreadyRegContact', 'Text (same contact number)',   'This contact number is already registered under the name below. Tap it to check in.'],
+        ['cancelButton',      'Cancel button',                'CANCEL']
+      ]
+    },
+    {
+      page: 'Thank-you page', screen: 'confirmationScreen', icon: '✅',
+      items: [
+        ['doneTitle',         'Title (member checked in)',    'Attendance Recorded!'],
+        ['doneMessage',       'Message (member checked in)',  'Thank you for attending!'],
+        ['doneNewTitle',      'Title (new person registered)', 'Registration Successful!'],
+        ['doneNewMessage',    'Message (new person registered)', 'Welcome! Your registration and attendance have been recorded.'],
+        ['alreadyTitle',      'Title (checked in twice)',     'Already Checked In'],
+        ['alreadyMessage',    'Message (checked in twice)',   'Your attendance has already been recorded for today.'],
+        ['alreadyTimePrefix', 'Words before the time',        'Checked in at'],
+        ['doneButton',        'Button',                       'DONE'],
+        ['autoReturn',        'Countdown text',               'Returning to the home screen in']
+      ]
+    },
+    {
+      page: 'On every page', screen: '', icon: '↩️',
+      items: [
+        ['backButton', 'Back button', '← Back']
+      ]
+    }
+  ];
+
+  var DEFAULT_TEXTS = {};
+  TEXT_GROUPS.forEach(function(g) {
+    g.items.forEach(function(item) { DEFAULT_TEXTS[item[0]] = item[2]; });
+  });
+
+  /** The words to show for a key (custom words win). */
+  function T(key) {
+    var source = (draft && document.documentElement.classList.contains('editing')) ? draft : SETTINGS;
+    var custom = (source && source.pageTexts) || {};
+    return custom[key] || DEFAULT_TEXTS[key] || '';
+  }
+
+  function applyTexts() {
+    document.querySelectorAll('[data-t]').forEach(function(el) {
+      el.textContent = T(el.getAttribute('data-t'));
+    });
+    document.querySelectorAll('[data-ph]').forEach(function(el) {
+      el.placeholder = T(el.getAttribute('data-ph'));
+    });
+  }
 
 
   // =========================================
@@ -1323,6 +1485,24 @@
 
     // ---- Title font ----
     root.style.setProperty('--title-font', fontCss(s.titleFont));
+
+    // ---- Layout & alignment ----
+    var pos = String(s.cardPosition || 'center-center').split('-');
+    var app = document.querySelector('.app');
+    var flex = { top: 'flex-start', left: 'flex-start', center: 'center', bottom: 'flex-end', right: 'flex-end' };
+    app.style.alignItems = flex[pos[0]] || 'center';
+    app.style.justifyContent = flex[pos[1]] || 'center';
+
+    root.style.setProperty('--text-align', s.textAlign || 'center');
+    root.style.setProperty('--card-width', ({ narrow: '480px', normal: '650px', wide: '880px' })[s.cardWidth] || '650px');
+
+    var c = document.querySelector('.container');
+    ['left', 'center', 'right'].forEach(function(a) {
+      c.classList.toggle('btn-align-' + a, (s.buttonAlign || 'left') === a);
+    });
+
+    // ---- Words on every page ----
+    applyTexts();
 
     // ---- Home screen buttons ----
     applyChoice('new', s.newTitle || 'NEW ATTENDEE', s.newDesc, s.newIcon || '🆕');
@@ -1533,7 +1713,7 @@
         '<span class="person-name">' +
           (term ? highlightName(person.fullName, term) : escapeHtml(person.fullName)) +
         '</span>' +
-        (person.present ? '<span class="badge">✓ Present</span>' : '') +
+        (person.present ? '<span class="badge">' + escapeHtml(T('memPresentBadge')) + '</span>' : '') +
         '<span class="arrow">›</span>' +
       '</button>'
     );
@@ -1547,7 +1727,7 @@
   function showRegisteredAttendee() {
     stopAutoReturn();
     $('searchInput').value = '';
-    $('searchResults').innerHTML = '<div class="hint">Start typing — matching names will appear here.</div>';
+    $('searchResults').innerHTML = '<div class="hint">' + escapeHtml(T('memHint')) + '</div>';
     showScreen('searchScreen');
 
     // Refresh the list so people registered on other devices appear.
@@ -1561,7 +1741,7 @@
     var box = $('searchResults');
 
     if (!term.trim()) {
-      box.innerHTML = '<div class="hint">Start typing — matching names will appear here.</div>';
+      box.innerHTML = '<div class="hint">' + escapeHtml(T('memHint')) + '</div>';
       return;
     }
 
@@ -1575,14 +1755,12 @@
 
     if (result.total === 0) {
       box.innerHTML =
-        '<div class="message warning">No registered name matches "' + escapeHtml(term.trim()) + '". ' +
-        'Check the spelling, or register below if this is your first time.</div>';
+        '<div class="message warning">' + escapeHtml(T('memNotFound')) + '</div>';
       return;
     }
 
     var html =
-      '<div class="result-count">' + result.total +
-      (result.total === 1 ? ' name found' : ' names found') + ' — tap your name to check in</div>';
+      '<div class="result-count">' + result.total + ' · ' + escapeHtml(T('memFoundText')) + '</div>';
 
     result.items.forEach(function(person) {
       html += personRow(person, term);
@@ -1625,7 +1803,7 @@
       return;
     }
 
-    var html = '<div class="suggest-title">Already registered? Tap your name to check in:</div>';
+    var html = '<div class="suggest-title">' + escapeHtml(T('newSuggestTitle')) + '</div>';
     result.items.forEach(function(person) {
       html += personRow(person, term);
     });
@@ -1648,7 +1826,7 @@
     google.script.run
       .withSuccessHandler(function(matches) {
         button.disabled = false;
-        button.textContent = 'CONTINUE';
+        button.textContent = T('newContinueButton');
         clearMessage('newNameMessage');
 
         if (!matches || matches.length === 0) {
@@ -1657,14 +1835,14 @@
         }
 
         showMatches(matches, {
-          title: matches.length === 1 ? 'Is this you?' : 'Are you one of these?',
-          text: 'We found a similar name in our list. If it\'s you, tap it to check in.',
+          title: T('matchTitle'),
+          text: T('matchText'),
           newName: name
         });
       })
       .withFailureHandler(function(error) {
         button.disabled = false;
-        button.textContent = 'CONTINUE';
+        button.textContent = T('newContinueButton');
         showMessage('newNameMessage', errorText(error, 'Something went wrong. Please try again.'), 'error');
       })
       .findNameMatches(name);
@@ -1732,17 +1910,15 @@
     google.script.run
       .withSuccessHandler(function(result) {
         button.disabled = false;
-        button.textContent = 'REGISTER & CHECK IN';
+        button.textContent = T('regButton');
         clearMessage('registrationMessage');
 
         if (result.alreadyExists) {
           showMatches(
             [{ id: result.id, fullName: result.fullName }],
             {
-              title: "You're Already Registered!",
-              text: result.reason === 'contact'
-                ? 'This contact number is already registered under the name below. Tap it to check in.'
-                : 'This name is already in our list. Tap it to check in.'
+              title: T('alreadyRegTitle'),
+              text: result.reason === 'contact' ? T('alreadyRegContact') : T('alreadyRegText')
             }
           );
           return;
@@ -1757,7 +1933,7 @@
       })
       .withFailureHandler(function(error) {
         button.disabled = false;
-        button.textContent = 'REGISTER & CHECK IN';
+        button.textContent = T('regButton');
         showMessage('registrationMessage', errorText(error, 'Unable to complete registration.'), 'error');
       })
       .registerNewAttendee(formData);
@@ -1805,15 +1981,13 @@
 
   function showConfirmation(name, timestamp, isNew) {
     $('confirmationIcon').textContent = '✅';
-    $('confirmationTitle').textContent = isNew ? 'Registration Successful!' : 'Attendance Recorded!';
+    $('confirmationTitle').textContent = isNew ? T('doneNewTitle') : T('doneTitle');
     $('confirmationName').textContent = name;
     $('confirmationTime').textContent = timestamp || '';
 
     var msg = $('confirmationMessage');
     msg.className = 'message success';
-    msg.textContent = isNew
-      ? 'Welcome! Your registration and attendance have been recorded.'
-      : 'Thank you for attending!';
+    msg.textContent = isNew ? T('doneNewMessage') : T('doneMessage');
 
     showScreen('confirmationScreen');
     startAutoReturn();
@@ -1821,13 +1995,13 @@
 
   function showAlreadyPresent(name, timestamp) {
     $('confirmationIcon').textContent = '⚠️';
-    $('confirmationTitle').textContent = 'Already Checked In';
+    $('confirmationTitle').textContent = T('alreadyTitle');
     $('confirmationName').textContent = name;
-    $('confirmationTime').textContent = 'Checked in at ' + (timestamp || '');
+    $('confirmationTime').textContent = T('alreadyTimePrefix') + ' ' + (timestamp || '');
 
     var msg = $('confirmationMessage');
     msg.className = 'message warning';
-    msg.textContent = 'Your attendance has already been recorded for today.';
+    msg.textContent = T('alreadyMessage');
 
     showScreen('confirmationScreen');
     startAutoReturn();
@@ -1837,11 +2011,11 @@
   function startAutoReturn() {
     stopAutoReturn();
     var seconds = 10;
-    $('autoReturn').textContent = 'Returning to the home screen in ' + seconds + 's';
+    $('autoReturn').textContent = T('autoReturn') + ' ' + seconds + 's';
 
     autoReturnInterval = setInterval(function() {
       seconds--;
-      $('autoReturn').textContent = 'Returning to the home screen in ' + seconds + 's';
+      $('autoReturn').textContent = T('autoReturn') + ' ' + seconds + 's';
     }, 1000);
 
     autoReturnTimer = setTimeout(showHome, seconds * 1000);
@@ -1872,11 +2046,11 @@
 
     var checkButton = $('checkNewNameButton');
     checkButton.disabled = false;
-    checkButton.textContent = 'CONTINUE';
+    checkButton.textContent = T('newContinueButton');
 
     var registerButton = $('registerButton');
     registerButton.disabled = false;
-    registerButton.textContent = 'REGISTER & CHECK IN';
+    registerButton.textContent = T('regButton');
   }
 
 
@@ -1941,13 +2115,20 @@
       }).join('');
 
     renderFontTiles();
+    setupLayoutAndWords();
 
     // ---- one click handler for all tiles ----
     $('adminForm').addEventListener('click', function(e) {
       if (!draft) return;
       var t = e.target.closest('[data-icon],[data-card],[data-text],[data-accent],[data-font],[data-bg],' +
-                               '[data-choiceicon],[data-btncolor],[data-btntext],[data-btnfont]');
+                               '[data-choiceicon],[data-btncolor],[data-btntext],[data-btnfont],' +
+                               '[data-pos],[data-width],[data-talign],[data-balign]');
       if (!t) return;
+
+      if (t.hasAttribute('data-pos'))    draft.cardPosition = t.getAttribute('data-pos');
+      if (t.hasAttribute('data-width'))  draft.cardWidth = t.getAttribute('data-width');
+      if (t.hasAttribute('data-talign')) draft.textAlign = t.getAttribute('data-talign');
+      if (t.hasAttribute('data-balign')) draft.buttonAlign = t.getAttribute('data-balign');
 
       if (t.hasAttribute('data-choiceicon')) {
         draft[t.getAttribute('data-target') + 'Icon'] = t.getAttribute('data-choiceicon');
@@ -2098,6 +2279,10 @@
     mark('btnTextGrid', 'data-btntext', draft.buttonTextColor || '');
     mark('newIconGrid', 'data-choiceicon', draft.newIcon);
     mark('memberIconGrid', 'data-choiceicon', draft.memberIcon);
+    mark('posGrid', 'data-pos', draft.cardPosition || 'center-center');
+    mark('widthGrid', 'data-width', draft.cardWidth || 'normal');
+    mark('textAlignGrid', 'data-talign', draft.textAlign || 'center');
+    mark('buttonAlignGrid', 'data-balign', draft.buttonAlign || 'left');
 
     $('cardColorGrid').querySelectorAll('[data-card]').forEach(function(el) {
       var c = CARD_COLORS[Number(el.getAttribute('data-card'))];
@@ -2112,6 +2297,8 @@
   function openAdmin() {
     stopAutoReturn();
     draft = JSON.parse(JSON.stringify(SETTINGS));
+    draft.pageTexts = draft.pageTexts || {};
+    document.documentElement.classList.add('editing');
     clearMessage('adminMessage');
     fillAdminForm();
     showScreen('adminScreen');
@@ -2142,6 +2329,7 @@
     $('adminBtnColor').value = isHex6(draft.buttonColor) ? draft.buttonColor : '#ffffff';
     $('adminBtnFade').value = draft.buttonFade;
     $('btnImageFile').value = '';
+    fillWordBoxes();
     renderFontTiles();
     refreshAdminPreview();
   }
@@ -2271,6 +2459,118 @@
     showMessage('adminMessage', 'Original look restored. Press ✅ SAVE to keep it.', 'info');
   }
 
+
+  // ---- Step 9 & 10: layout and words ----
+
+  function setupLayoutAndWords() {
+    var posHtml = '';
+    ['top', 'center', 'bottom'].forEach(function(v) {
+      ['left', 'center', 'right'].forEach(function(h) {
+        var j = { left: 'flex-start', center: 'center', right: 'flex-end' }[h];
+        var a = { top: 'flex-start', center: 'center', bottom: 'flex-end' }[v];
+        posHtml += tileHtml('', 'data-pos="' + v + '-' + h + '"',
+          'justify-content:' + j + ';align-items:' + a, '<span class="pos-dot"></span>', v + ' ' + h);
+      });
+    });
+    $('posGrid').innerHTML = posHtml;
+
+    $('widthGrid').innerHTML = [['narrow', 'Small'], ['normal', 'Normal'], ['wide', 'Big']].map(function(w) {
+      return tileHtml('', 'data-width="' + w[0] + '"', '', w[1]);
+    }).join('');
+
+    function alignTiles(attr) {
+      return ['left', 'center', 'right'].map(function(a) {
+        return tileHtml('align-tile ' + a, attr + '="' + a + '"', 'flex-direction:column;gap:6px',
+          '<span class="lines"><span></span><span></span><span></span></span>' +
+          (a.charAt(0).toUpperCase() + a.slice(1)));
+      }).join('');
+    }
+    $('textAlignGrid').innerHTML = alignTiles('data-talign');
+    $('buttonAlignGrid').innerHTML = alignTiles('data-balign');
+
+    // Word boxes, one group per page
+    $('wordsGroups').innerHTML = TEXT_GROUPS.map(function(g, gi) {
+      return '<details class="words-group"><summary>' + escapeHtml(g.icon + '  ' + g.page) + '</summary>' +
+        g.items.map(function(item) {
+          return '<label for="word_' + item[0] + '">' + escapeHtml(item[1]) + '</label>' +
+            '<input type="text" maxlength="300" id="word_' + item[0] + '" data-word="' + item[0] + '" ' +
+            'placeholder="' + escapeHtml(item[2]) + '">';
+        }).join('') +
+        '<div class="row">' +
+          (g.screen ? '<button type="button" class="mini-button" data-previewpage="' + g.screen + '">👀 See this page</button>' : '') +
+          '<button type="button" class="mini-button" data-resetwords="' + gi + '">↺ Original words</button>' +
+        '</div></details>';
+    }).join('');
+
+    $('wordsGroups').addEventListener('input', function(e) {
+      var key = e.target.getAttribute('data-word');
+      if (!key || !draft) return;
+      draft.pageTexts = draft.pageTexts || {};
+      var v = e.target.value.trim();
+      if (v) draft.pageTexts[key] = v; else delete draft.pageTexts[key];
+      applyTexts();
+    });
+
+    $('wordsGroups').addEventListener('click', function(e) {
+      var pv = e.target.closest('[data-previewpage]');
+      if (pv) { previewPage(pv.getAttribute('data-previewpage')); return; }
+
+      var rs = e.target.closest('[data-resetwords]');
+      if (rs && draft) {
+        TEXT_GROUPS[Number(rs.getAttribute('data-resetwords'))].items.forEach(function(item) {
+          if (draft.pageTexts) delete draft.pageTexts[item[0]];
+          $('word_' + item[0]).value = '';
+        });
+        applyTexts();
+      }
+    });
+  }
+
+  function fillWordBoxes() {
+    var texts = draft.pageTexts || {};
+    document.querySelectorAll('[data-word]').forEach(function(el) {
+      el.value = texts[el.getAttribute('data-word')] || '';
+    });
+  }
+
+  /** Show any page with sample content so its words can be checked. */
+  function previewPage(screenId) {
+    if (!draft) return;
+    var sample = { id: '0', fullName: 'Juan Dela Cruz', present: false };
+
+    if (screenId === 'searchScreen') {
+      $('searchInput').value = '';
+      $('searchResults').innerHTML =
+        '<div class="result-count">1 · ' + escapeHtml(T('memFoundText')) + '</div>' +
+        personRow(sample, '') +
+        personRow({ id: '1', fullName: 'Maria Santos', present: true }, '');
+    }
+    if (screenId === 'newNameScreen') {
+      $('newNameSuggestions').innerHTML =
+        '<div class="suggest-title">' + escapeHtml(T('newSuggestTitle')) + '</div>' + personRow(sample, '');
+    }
+    if (screenId === 'matchScreen') {
+      $('matchTitle').textContent = T('matchTitle');
+      $('matchText').textContent = T('matchText');
+      $('matchList').innerHTML = personRow(sample, '');
+      $('matchNewButton').classList.remove('hidden');
+    }
+    if (screenId === 'confirmationScreen') {
+      $('confirmationIcon').textContent = '✅';
+      $('confirmationTitle').textContent = T('doneTitle');
+      $('confirmationName').textContent = sample.fullName;
+      $('confirmationTime').textContent = 'November 27, 2026 6:30 PM';
+      $('confirmationMessage').className = 'message success';
+      $('confirmationMessage').textContent = T('doneMessage');
+      $('autoReturn').textContent = T('autoReturn') + ' 10s';
+    }
+
+    previewing = true;
+    document.documentElement.classList.add('previewing');
+    $('previewBar').classList.remove('hidden');
+    showScreen(screenId);
+  }
+
   // ---- Preview ----
 
   function previewHome() {
@@ -2283,6 +2583,7 @@
 
   function backToEditing() {
     previewing = false;
+    clearForms();
     document.documentElement.classList.remove('previewing');
     $('previewBar').classList.add('hidden');
     showScreen('adminScreen');
@@ -2335,8 +2636,9 @@
 
   function cancelAdmin() {
     // Undo any unsaved changes.
-    applySettings(SETTINGS);
+    document.documentElement.classList.remove('editing');
     draft = null;
+    applySettings(SETTINGS);
     showHome();
   }
 </script>
