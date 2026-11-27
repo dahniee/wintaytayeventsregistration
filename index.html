@@ -407,8 +407,27 @@
       opacity: 0.8;
     }
 
-    .choice-button { background: var(--tile-bg); color: inherit; }
-    .choice-button:hover { background: var(--tile-bg); filter: brightness(0.95); }
+    .choice-button {
+      background: var(--choice-bg, var(--tile-bg));
+      color: var(--choice-text, inherit);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+    }
+    .choice-button:hover { background: var(--choice-bg, var(--tile-bg)); filter: brightness(0.95); }
+    .choice-title { font-family: var(--choice-font, Arial, Helvetica, sans-serif); }
+    .choice-button.no-icon .choice-description { margin-left: 0; }
+    .choice-button.no-desc .choice-description { display: none; }
+
+    .sub-box {
+      margin-top: 16px;
+      padding: 4px 16px 18px;
+      border-radius: 14px;
+      background: rgba(128,128,128,0.10);
+    }
+    .sub-title { margin-top: 14px; font-size: 17px; font-weight: bold; }
+    .small-emoji { grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); }
+    .small-emoji .tile { font-size: 26px; min-height: 52px; }
+    .small-emoji .tile.word { font-size: 12px; }
+    .tile.auto { background: repeating-linear-gradient(45deg, #fff, #fff 6px, #eee 6px, #eee 12px); color: #222; }
 
     input[type="text"], input[type="tel"], input[type="password"],
     input[type="url"], textarea { color: #222; }
@@ -597,16 +616,16 @@
         Welcome! Please select an option below.
       </div>
 
-      <button class="choice-button" onclick="showNewAttendee()">
-        <span class="choice-icon">🆕</span>
-        <span class="choice-title">NEW ATTENDEE</span>
-        <span class="choice-description">First time attending? Register here.</span>
+      <button class="choice-button" id="newChoice" onclick="showNewAttendee()">
+        <span class="choice-icon" id="newChoiceIcon">🆕</span>
+        <span class="choice-title" id="newChoiceTitle">NEW ATTENDEE</span>
+        <span class="choice-description" id="newChoiceDesc">First time attending? Register here.</span>
       </button>
 
-      <button class="choice-button" onclick="showRegisteredAttendee()">
-        <span class="choice-icon">👤</span>
-        <span class="choice-title">MEMBERS</span>
-        <span class="choice-description">Already registered? Search your name.</span>
+      <button class="choice-button" id="memberChoice" onclick="showRegisteredAttendee()">
+        <span class="choice-icon" id="memberChoiceIcon">👤</span>
+        <span class="choice-title" id="memberChoiceTitle">MEMBERS</span>
+        <span class="choice-description" id="memberChoiceDesc">Already registered? Search your name.</span>
       </button>
 
     </div>
@@ -804,8 +823,70 @@
 
         <div class="tile-grid font-grid" id="fontGrid"></div>
 
+        <!-- 6. HOME SCREEN BUTTONS -->
+        <div class="step-title"><span class="step-number">6</span> Home screen buttons</div>
+        <div class="step-help">The two big buttons people tap first.</div>
+
+        <div class="sub-box">
+          <div class="sub-title">First button <span class="small-note">(for new people)</span></div>
+
+          <label for="adminNewTitle">Title</label>
+          <input type="text" id="adminNewTitle" maxlength="60">
+
+          <label for="adminNewDesc">Small text under the title</label>
+          <input type="text" id="adminNewDesc" maxlength="120">
+
+          <label>Icon</label>
+          <div class="tile-grid emoji-grid small-emoji" id="newIconGrid"></div>
+        </div>
+
+        <div class="sub-box">
+          <div class="sub-title">Second button <span class="small-note">(for members)</span></div>
+
+          <label for="adminMemberTitle">Title</label>
+          <input type="text" id="adminMemberTitle" maxlength="60">
+
+          <label for="adminMemberDesc">Small text under the title</label>
+          <input type="text" id="adminMemberDesc" maxlength="120">
+
+          <label>Icon</label>
+          <div class="tile-grid emoji-grid small-emoji" id="memberIconGrid"></div>
+        </div>
+
+        <label>Color of both buttons</label>
+        <div class="tile-grid text-grid" id="btnColorGrid"></div>
+        <div class="row" style="margin-top: 12px;">
+          <input type="color" id="adminBtnColor" value="#ffffff">
+          <span class="small-note">Other color</span>
+        </div>
+
+        <label>Text color of both buttons</label>
+        <div class="tile-grid text-grid" id="btnTextGrid"></div>
+
+        <label>Photo inside the buttons (optional)</label>
+        <div class="photo-row" style="margin-top: 0;">
+          <label class="photo-button">
+            📷 Choose a photo
+            <input type="file" id="btnImageFile" accept="image/png,image/jpeg,image/webp,image/gif">
+          </label>
+          <button type="button" class="mini-button" onclick="removeImage('buttonImage')">Remove photo</button>
+        </div>
+        <div class="image-preview hidden" id="btnImagePreview"></div>
+
+        <div id="btnFadeBox">
+          <label for="adminBtnFade">Make the photo softer so words are easy to read</label>
+          <div class="row">
+            <span class="small-note">Clear</span>
+            <input type="range" id="adminBtnFade" min="0" max="90" step="5">
+            <span class="small-note">Soft</span>
+          </div>
+        </div>
+
+        <label>Font of the button titles</label>
+        <div class="tile-grid font-grid" id="btnFontGrid"></div>
+
         <!-- 6. PAGE BACKGROUND -->
-        <div class="step-title"><span class="step-number">6</span> Page background (behind the card)</div>
+        <div class="step-title"><span class="step-number">7</span> Page background (behind the card)</div>
 
         <div class="swatches" id="swatches"></div>
 
@@ -838,7 +919,8 @@
         </details>
 
         <!-- 7. BUTTONS -->
-        <div class="step-title"><span class="step-number">7</span> Button color</div>
+        <div class="step-title"><span class="step-number">8</span> Color of the other buttons</div>
+        <div class="step-help">Buttons like CONTINUE, REGISTER and SAVE.</div>
 
         <div class="tile-grid text-grid" id="accentGrid"></div>
 
@@ -920,7 +1002,18 @@
     cardFade: 70,
     icon: '👋',
     iconImage: '',
-    titleFont: 'Default'
+    titleFont: 'Default',
+    newTitle: 'NEW ATTENDEE',
+    newDesc: 'First time attending? Register here.',
+    newIcon: '🆕',
+    memberTitle: 'MEMBERS',
+    memberDesc: 'Already registered? Search your name.',
+    memberIcon: '👤',
+    buttonColor: '',
+    buttonTextColor: '',
+    buttonImage: '',
+    buttonFade: 60,
+    buttonFont: 'Default'
   };
 
   try {
@@ -1003,6 +1096,29 @@
     { name: 'Great Vibes',      css: "'Great Vibes', cursive",            label: 'Fancy' }
   ];
 
+  var BUTTON_ICONS = [
+    '🆕', '👤', '👥', '✨', '📝', '✍️', '🙋', '👋', '➕', '🎟️',
+    '🔍', '✅', '🙌', '🤝', '⭐', '❤️', '🎉', '🏠', '👷', '🛠️'
+  ];
+
+  // '' = automatic (matches the card)
+  var BUTTON_COLORS = [
+    { name: 'Auto',     value: '' },
+    { name: 'White',    value: '#ffffff' },
+    { name: 'Cream',    value: '#fff8e7' },
+    { name: 'Pink',     value: '#ffe4ec' },
+    { name: 'Sky',      value: '#e3f2fd' },
+    { name: 'Mint',     value: '#e6f7ef' },
+    { name: 'Yellow',   value: '#fff3c4' },
+    { name: 'Blue',     value: '#1a73e8' },
+    { name: 'Navy',     value: '#1e2a4a' },
+    { name: 'Red',      value: '#c62828' },
+    { name: 'Maroon',   value: '#5a1a2a' },
+    { name: 'Green',    value: '#2e7d32' },
+    { name: 'Gold',     value: '#c99700' },
+    { name: 'Black',    value: '#000000' }
+  ];
+
   var DEFAULT_LOOK = {
     background: '#f4f6f8',
     backgroundImage: '',
@@ -1014,7 +1130,14 @@
     cardFade: 70,
     icon: '👋',
     iconImage: '',
-    titleFont: 'Default'
+    titleFont: 'Default',
+    newIcon: '🆕',
+    memberIcon: '👤',
+    buttonColor: '',
+    buttonTextColor: '',
+    buttonImage: '',
+    buttonFade: 60,
+    buttonFont: 'Default'
   };
 
 
@@ -1200,6 +1323,53 @@
 
     // ---- Title font ----
     root.style.setProperty('--title-font', fontCss(s.titleFont));
+
+    // ---- Home screen buttons ----
+    applyChoice('new', s.newTitle || 'NEW ATTENDEE', s.newDesc, s.newIcon || '🆕');
+    applyChoice('member', s.memberTitle || 'MEMBERS', s.memberDesc, s.memberIcon || '👤');
+
+    var btnColor = s.buttonColor || '';
+    var btnText = s.buttonTextColor || (btnColor ? readableTextColor(btnColor) === '#111111' ? '#222222' : '#ffffff' : '');
+    var choiceBg = '';
+
+    if (s.buttonImage) {
+      // Tint the photo with the button color (or white/black when automatic).
+      var base = btnColor || (lightText ? '#000000' : '#ffffff');
+      var bf = hexToRgba(base, (Number(s.buttonFade) || 0) / 100);
+      choiceBg = 'linear-gradient(' + bf + ', ' + bf + '), ' + cssUrl(s.buttonImage) + ' center / cover no-repeat';
+    } else if (btnColor) {
+      choiceBg = btnColor;
+    }
+
+    setVar('--choice-bg', choiceBg);
+    setVar('--choice-text', btnText);
+    root.style.setProperty('--choice-font', fontCss(s.buttonFont));
+  }
+
+  function setVar(name, value) {
+    if (value) {
+      document.documentElement.style.setProperty(name, value);
+    } else {
+      document.documentElement.style.removeProperty(name);
+    }
+  }
+
+  function applyChoice(prefix, title, desc, icon) {
+    var button = $(prefix + 'Choice');
+    $(prefix + 'ChoiceTitle').textContent = title;
+    $(prefix + 'ChoiceDesc').textContent = desc || '';
+    button.classList.toggle('no-desc', !desc);
+
+    var iconEl = $(prefix + 'ChoiceIcon');
+    if (icon === 'none') {
+      iconEl.textContent = '';
+      iconEl.classList.add('hidden');
+      button.classList.add('no-icon');
+    } else {
+      iconEl.textContent = icon;
+      iconEl.classList.remove('hidden');
+      button.classList.remove('no-icon');
+    }
   }
 
   function cssUrl(url) {
@@ -1748,13 +1918,47 @@
         'data-bg="' + escapeHtml(t.value) + '" style="background:' + escapeHtml(t.value) + '"></button>';
     }).join('');
 
+    ['new', 'member'].forEach(function(target) {
+      $(target + 'IconGrid').innerHTML =
+        BUTTON_ICONS.map(function(icon) {
+          return tileHtml('', 'data-choiceicon="' + escapeHtml(icon) + '" data-target="' + target + '"', '', escapeHtml(icon));
+        }).join('') +
+        tileHtml('word', 'data-choiceicon="none" data-target="' + target + '"', '', 'No icon');
+    });
+
+    $('btnColorGrid').innerHTML = BUTTON_COLORS.map(function(c) {
+      return c.value
+        ? tileHtml('', 'data-btncolor="' + c.value + '"',
+            'background:' + c.value + ';color:' + readableTextColor(c.value), escapeHtml(c.name))
+        : tileHtml('auto', 'data-btncolor=""', '', 'Auto', 'Matches the card');
+    }).join('');
+
+    $('btnTextGrid').innerHTML =
+      tileHtml('auto', 'data-btntext=""', '', 'Auto', 'Picks black or white for you') +
+      TEXT_COLORS.map(function(c) {
+        return tileHtml('', 'data-btntext="' + c.value + '"',
+          'background:' + c.value + ';color:' + readableTextColor(c.value), escapeHtml(c.name));
+      }).join('');
+
     renderFontTiles();
 
     // ---- one click handler for all tiles ----
     $('adminForm').addEventListener('click', function(e) {
       if (!draft) return;
-      var t = e.target.closest('[data-icon],[data-card],[data-text],[data-accent],[data-font],[data-bg]');
+      var t = e.target.closest('[data-icon],[data-card],[data-text],[data-accent],[data-font],[data-bg],' +
+                               '[data-choiceicon],[data-btncolor],[data-btntext],[data-btnfont]');
       if (!t) return;
+
+      if (t.hasAttribute('data-choiceicon')) {
+        draft[t.getAttribute('data-target') + 'Icon'] = t.getAttribute('data-choiceicon');
+      }
+      if (t.hasAttribute('data-btncolor')) {
+        draft.buttonColor = t.getAttribute('data-btncolor');
+        draft.buttonTextColor = ''; // automatic text again
+        if (draft.buttonColor) $('adminBtnColor').value = draft.buttonColor;
+      }
+      if (t.hasAttribute('data-btntext')) draft.buttonTextColor = t.getAttribute('data-btntext');
+      if (t.hasAttribute('data-btnfont')) draft.buttonFont = t.getAttribute('data-btnfont');
 
       if (t.hasAttribute('data-icon')) {
         setIcon(t.getAttribute('data-icon'));
@@ -1783,6 +1987,34 @@
     $('adminWelcome').addEventListener('input', function() {
       draft.welcomeMessage = this.value;
       applySettings(draft);
+    });
+
+    [['adminNewTitle', 'newTitle'], ['adminNewDesc', 'newDesc'],
+     ['adminMemberTitle', 'memberTitle'], ['adminMemberDesc', 'memberDesc']]
+      .forEach(function(pair) {
+        $(pair[0]).addEventListener('input', function() {
+          draft[pair[1]] = this.value;
+          applySettings(draft);
+          if (pair[1] === 'newTitle') {
+            renderFontTiles();
+            markSelected();
+          }
+        });
+      });
+
+    $('adminBtnColor').addEventListener('input', function() {
+      draft.buttonColor = this.value;
+      draft.buttonTextColor = '';
+      refreshAdminPreview();
+    });
+
+    $('adminBtnFade').addEventListener('input', function() {
+      draft.buttonFade = Number(this.value);
+      applySettings(draft);
+    });
+
+    $('btnImageFile').addEventListener('change', function() {
+      pickPhoto(this, 'buttonImage', 900, 'jpeg');
     });
 
     $('adminCardColor').addEventListener('input', function() {
@@ -1835,6 +2067,13 @@
   }
 
   function renderFontTiles() {
+    var btnSample = (draft && draft.newTitle) || SETTINGS.newTitle || 'NEW ATTENDEE';
+    $('btnFontGrid').innerHTML = FONTS.map(function(f) {
+      return tileHtml('', 'data-btnfont="' + escapeHtml(f.name) + '"', '',
+        '<span class="font-sample" style="font-family:' + escapeHtml(f.css) + '">' + escapeHtml(btnSample) + '</span>' +
+        '<span class="font-name">' + escapeHtml(f.label) + '</span>');
+    }).join('');
+
     var sample = (draft && draft.eventName) || SETTINGS.eventName || 'Our Event';
     $('fontGrid').innerHTML = FONTS.map(function(f) {
       return tileHtml('', 'data-font="' + escapeHtml(f.name) + '"', '',
@@ -1854,6 +2093,11 @@
     mark('textColorGrid', 'data-text', draft.textColor);
     mark('accentGrid', 'data-accent', draft.accentColor);
     mark('fontGrid', 'data-font', draft.titleFont);
+    mark('btnFontGrid', 'data-btnfont', draft.buttonFont || 'Default');
+    mark('btnColorGrid', 'data-btncolor', draft.buttonColor || '');
+    mark('btnTextGrid', 'data-btntext', draft.buttonTextColor || '');
+    mark('newIconGrid', 'data-choiceicon', draft.newIcon);
+    mark('memberIconGrid', 'data-choiceicon', draft.memberIcon);
 
     $('cardColorGrid').querySelectorAll('[data-card]').forEach(function(el) {
       var c = CARD_COLORS[Number(el.getAttribute('data-card'))];
@@ -1891,6 +2135,13 @@
     $('adminAccent').value = isHex6(draft.accentColor) ? draft.accentColor : '#222222';
     $('adminCardColor').value = isHex6(draft.cardColor) ? draft.cardColor : '#ffffff';
     if (isHex6(draft.background)) $('adminCustomColor').value = draft.background;
+    $('adminNewTitle').value = draft.newTitle || '';
+    $('adminNewDesc').value = draft.newDesc || '';
+    $('adminMemberTitle').value = draft.memberTitle || '';
+    $('adminMemberDesc').value = draft.memberDesc || '';
+    $('adminBtnColor').value = isHex6(draft.buttonColor) ? draft.buttonColor : '#ffffff';
+    $('adminBtnFade').value = draft.buttonFade;
+    $('btnImageFile').value = '';
     renderFontTiles();
     refreshAdminPreview();
   }
@@ -1900,6 +2151,8 @@
     showImagePreview('cardImagePreview', draft.cardImage);
     $('overlayBox').classList.toggle('hidden', !draft.backgroundImage);
     $('cardFadeBox').classList.toggle('hidden', !draft.cardImage);
+    showImagePreview('btnImagePreview', draft.buttonImage);
+    $('btnFadeBox').classList.toggle('hidden', !draft.buttonImage);
     markSelected();
     applySettings(draft);
   }
@@ -1931,6 +2184,7 @@
       $('adminImageFile').value = '';
     }
     if (key === 'cardImage') $('cardImageFile').value = '';
+    if (key === 'buttonImage') $('btnImageFile').value = '';
     refreshAdminPreview();
   }
 
@@ -2046,6 +2300,11 @@
 
     if (!String(draft.eventName || '').trim()) {
       showMessage('adminMessage', 'Please type the event name (step 1).', 'error');
+      return;
+    }
+
+    if (!String(draft.newTitle || '').trim() || !String(draft.memberTitle || '').trim()) {
+      showMessage('adminMessage', 'Please type a title for both home screen buttons (step 6).', 'error');
       return;
     }
 
