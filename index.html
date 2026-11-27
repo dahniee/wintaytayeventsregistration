@@ -5,6 +5,10 @@
   <meta charset="utf-8">
   <title>Win TayTay Event Registration</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Montserrat:wght@800&family=Playfair+Display:wght@700&family=Merriweather:wght@700&family=Cinzel:wght@700&family=Bebas+Neue&family=Baloo+2:wght@700&family=Comic+Neue:wght@700&family=Pacifico&family=Dancing+Script:wght@700&family=Great+Vibes&display=swap">
+
   <style>
     :root {
       --accent: #222222;
@@ -376,6 +380,173 @@
       .choice-title { font-size: 19px; }
       input[type="text"], input[type="tel"], input[type="password"], input[type="url"], textarea { font-size: 16px; }
     }
+
+    /* =========================================
+     * PERSONALIZED WELCOME CARD
+     * ========================================= */
+    :root {
+      --card-bg: #ffffff;
+      --card-text: #222222;
+      --tile-bg: #f1f3f5;
+      --title-font: Arial, Helvetica, sans-serif;
+    }
+
+    .container {
+      background-color: var(--card-bg);
+      background-size: cover;
+      background-position: center;
+      color: var(--card-text);
+    }
+
+    h1, h2 { font-family: var(--title-font); }
+
+    .subtitle, .choice-description, .hint, .result-count, .suggest-title,
+    .confirmation-time, .auto-return, .back-button, .loading,
+    .small-note, .step-help {
+      color: inherit !important;
+      opacity: 0.8;
+    }
+
+    .choice-button { background: var(--tile-bg); color: inherit; }
+    .choice-button:hover { background: var(--tile-bg); filter: brightness(0.95); }
+
+    input[type="text"], input[type="tel"], input[type="password"],
+    input[type="url"], textarea { color: #222; }
+
+    .logo { min-height: 10px; }
+    .logo-img { max-height: 100px; max-width: 70%; object-fit: contain; display: inline-block; }
+
+    /* Settings screen – big, easy tiles */
+    .step-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 34px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(128,128,128,0.25);
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .step-number {
+      flex: 0 0 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--accent-text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+    }
+
+    .step-help { font-size: 14px; margin: 6px 0 12px; }
+
+    .tile-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .tile {
+      position: relative;
+      min-height: 64px;
+      border-radius: 12px;
+      border: 3px solid rgba(0,0,0,0.12);
+      cursor: pointer;
+      padding: 8px 4px;
+      font-size: 13px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: white;
+      color: #222;
+    }
+
+    .tile.selected { border-color: #1a73e8; box-shadow: 0 0 0 3px rgba(26,115,232,0.3); }
+
+    .tile.selected::after {
+      content: '✓';
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #1a73e8;
+      color: white;
+      font-size: 14px;
+      line-height: 24px;
+    }
+
+    .emoji-grid { grid-template-columns: repeat(auto-fill, minmax(62px, 1fr)); }
+    .emoji-grid .tile { font-size: 32px; min-height: 62px; padding: 0; }
+
+    .text-grid { grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); }
+    .text-grid .tile { min-height: 54px; font-size: 12px; }
+
+    .font-grid { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
+    .font-grid .tile { flex-direction: column; min-height: 84px; gap: 4px; padding: 10px 8px; }
+    .font-sample { font-size: 21px; line-height: 1.2; word-break: break-word; }
+    .font-name { font-family: Arial, sans-serif; font-size: 11px; font-weight: normal; color: #777; }
+
+    .photo-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 12px; }
+
+    .photo-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0;
+      padding: 14px 18px;
+      border-radius: 10px;
+      background: #1a73e8;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .photo-button input { display: none; }
+
+    .mini-button { color: #333; }
+
+    .advanced { margin-top: 14px; font-size: 14px; }
+    .advanced summary { cursor: pointer; opacity: 0.8; }
+
+    .action-buttons { display: flex; gap: 12px; margin-top: 30px; }
+    .action-buttons > * { flex: 1; margin-top: 0; }
+    .secondary-button.big { font-size: 18px; font-weight: bold; padding: 16px; }
+
+    .reset-button { display: block; margin: 24px auto 0; }
+
+    /* Preview bar */
+    .preview-bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 30;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 16px;
+      background: white;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
+    }
+
+    .preview-bar > button { flex: 1; margin: 0; max-width: 260px; }
+    .preview-label { font-weight: bold; color: #333; flex: 1; }
+
+    .previewing .choice-button { pointer-events: none; }
+    .previewing .app { padding-bottom: 90px; }
+
+    @media (max-width: 600px) {
+      .preview-label { display: none; }
+      .font-grid { grid-template-columns: 1fr 1fr; }
+    }
   </style>
 </head>
 
@@ -418,7 +589,7 @@
     <!-- ===================================== -->
     <div id="homeScreen" class="screen active">
 
-      <div class="logo">👋</div>
+      <div class="logo" id="eventLogo">👋</div>
 
       <h1 id="eventName">Event Attendance</h1>
 
@@ -562,12 +733,15 @@
     <!-- ===================================== -->
     <div id="adminScreen" class="screen">
 
-      <button class="back-button" onclick="cancelAdmin()">← Back</button>
+      <button class="back-button" onclick="cancelAdmin()">← Back without saving</button>
 
       <h1>Event Settings</h1>
+      <div class="subtitle">Tap the choices you like. Press 👀 PREVIEW to see it, then ✅ SAVE.</div>
 
       <div id="adminForm">
-        <div class="subtitle">Changes preview live. Press SAVE to apply them for everyone.</div>
+
+        <!-- 1. NAME -->
+        <div class="step-title"><span class="step-number">1</span> Event name &amp; message</div>
 
         <label for="adminEventName">Event Name</label>
         <input type="text" id="adminEventName" maxlength="120">
@@ -575,48 +749,126 @@
         <label for="adminWelcome">Welcome Message</label>
         <textarea id="adminWelcome" maxlength="300" style="min-height: 70px;"></textarea>
 
-        <div class="section-title">Background</div>
+        <!-- 2. ICON -->
+        <div class="step-title"><span class="step-number">2</span> Icon at the top</div>
+        <div class="step-help">Tap a picture, or use your own logo.</div>
 
-        <label>Theme</label>
+        <div class="tile-grid emoji-grid" id="iconGrid"></div>
+
+        <div class="photo-row">
+          <label class="photo-button">
+            🖼️ Use my own logo
+            <input type="file" id="iconFile" accept="image/png,image/jpeg,image/webp,image/gif">
+          </label>
+          <button type="button" class="mini-button" onclick="setIcon('none')">No icon</button>
+        </div>
+
+        <!-- 3. CARD -->
+        <div class="step-title"><span class="step-number">3</span> Welcome card color</div>
+        <div class="step-help">This is the box with the event name and buttons.</div>
+
+        <div class="tile-grid" id="cardColorGrid"></div>
+
+        <div class="row" style="margin-top: 12px;">
+          <input type="color" id="adminCardColor" value="#ffffff">
+          <span class="small-note">Other color</span>
+        </div>
+
+        <label>Text color</label>
+        <div class="tile-grid text-grid" id="textColorGrid"></div>
+
+        <!-- 4. CARD PHOTO -->
+        <div class="step-title"><span class="step-number">4</span> Photo inside the card (optional)</div>
+
+        <div class="photo-row">
+          <label class="photo-button">
+            📷 Choose a photo
+            <input type="file" id="cardImageFile" accept="image/png,image/jpeg,image/webp,image/gif">
+          </label>
+          <button type="button" class="mini-button" onclick="removeImage('cardImage')">Remove photo</button>
+        </div>
+        <div class="image-preview hidden" id="cardImagePreview"></div>
+
+        <div id="cardFadeBox">
+          <label for="adminCardFade">Make the photo softer so words are easy to read</label>
+          <div class="row">
+            <span class="small-note">Clear</span>
+            <input type="range" id="adminCardFade" min="0" max="90" step="5">
+            <span class="small-note">Soft</span>
+          </div>
+        </div>
+
+        <!-- 5. FONT -->
+        <div class="step-title"><span class="step-number">5</span> Title font</div>
+        <div class="step-help">Changes the style of the event name.</div>
+
+        <div class="tile-grid font-grid" id="fontGrid"></div>
+
+        <!-- 6. PAGE BACKGROUND -->
+        <div class="step-title"><span class="step-number">6</span> Page background (behind the card)</div>
+
         <div class="swatches" id="swatches"></div>
 
-        <label for="adminCustomColor">Or pick any color</label>
-        <div class="row">
+        <div class="row" style="margin-top: 12px;">
           <input type="color" id="adminCustomColor" value="#f4f6f8">
-          <span class="small-note">Used when no theme above is selected.</span>
+          <span class="small-note">Other color</span>
         </div>
 
-        <label>Background Image (optional)</label>
-        <div class="row">
-          <input type="file" id="adminImageFile" accept="image/png,image/jpeg,image/webp,image/gif">
-          <button class="mini-button" type="button" onclick="removeBackgroundImage()">Remove image</button>
+        <div class="photo-row">
+          <label class="photo-button">
+            📷 Choose a background photo
+            <input type="file" id="adminImageFile" accept="image/png,image/jpeg,image/webp,image/gif">
+          </label>
+          <button type="button" class="mini-button" onclick="removeImage('backgroundImage')">Remove photo</button>
         </div>
-        <div class="small-note">Upload an event poster or photo, or paste an image link below. Uploaded pictures are saved inside your Google Sheet.</div>
-
-        <input type="url" id="adminImageUrl" placeholder="https://..." style="margin-top: 10px;">
         <div class="image-preview hidden" id="imagePreview"></div>
 
-        <label for="adminOverlay">Image darkness: <span id="overlayValue">35</span>%</label>
-        <div class="row">
-          <input type="range" id="adminOverlay" min="0" max="80" step="5">
+        <div id="overlayBox">
+          <label for="adminOverlay">Make the background photo darker</label>
+          <div class="row">
+            <span class="small-note">Bright</span>
+            <input type="range" id="adminOverlay" min="0" max="80" step="5">
+            <span class="small-note">Dark</span>
+          </div>
         </div>
-        <div class="small-note">Darken the image so the welcome card stands out.</div>
 
-        <div class="section-title">Buttons</div>
+        <details class="advanced">
+          <summary>Use a picture link instead (advanced)</summary>
+          <input type="url" id="adminImageUrl" placeholder="https://..." style="margin-top: 10px;">
+        </details>
 
-        <label for="adminAccent">Button Color</label>
-        <div class="row">
+        <!-- 7. BUTTONS -->
+        <div class="step-title"><span class="step-number">7</span> Button color</div>
+
+        <div class="tile-grid text-grid" id="accentGrid"></div>
+
+        <div class="row" style="margin-top: 12px;">
           <input type="color" id="adminAccent" value="#222222">
+          <span class="small-note">Other color</span>
         </div>
 
-        <button class="primary-button" id="saveSettingsButton" onclick="saveAdminSettings()">SAVE SETTINGS</button>
-        <button class="secondary-button" onclick="cancelAdmin()">CANCEL</button>
+        <!-- ACTIONS -->
+        <div class="action-buttons">
+          <button class="secondary-button big" type="button" onclick="previewHome()">👀 PREVIEW</button>
+          <button class="primary-button" id="saveSettingsButton" onclick="saveAdminSettings()">✅ SAVE</button>
+        </div>
 
         <div id="adminMessage"></div>
+
+        <button class="mini-button reset-button" type="button" onclick="resetLook()">
+          ↺ Go back to the plain original look
+        </button>
       </div>
     </div>
 
   </div>
+</div>
+
+<!-- Shown while previewing the settings -->
+<div id="previewBar" class="preview-bar hidden">
+  <div class="preview-label">👀 This is a preview</div>
+  <button type="button" class="secondary-button" onclick="backToEditing()">✏️ Keep editing</button>
+  <button type="button" class="primary-button" onclick="saveFromPreview()">✅ SAVE</button>
 </div>
 
 <script type="application/json" id="settingsData"><?!= settingsJson ?></script>
@@ -661,7 +913,14 @@
     background: '#f4f6f8',
     backgroundImage: '',
     overlay: 35,
-    accentColor: '#222222'
+    accentColor: '#222222',
+    cardColor: '#ffffff',
+    textColor: '#222222',
+    cardImage: '',
+    cardFade: 70,
+    icon: '👋',
+    iconImage: '',
+    titleFont: 'Default'
   };
 
   try {
@@ -683,6 +942,80 @@
     { name: 'Night',      value: 'linear-gradient(135deg, #0f2027, #2c5364)' },
     { name: 'Charcoal',   value: '#1f2933' }
   ];
+
+  // Choices shown on the settings screen
+  var CARD_COLORS = [
+    { name: 'White',    card: '#ffffff', text: '#222222' },
+    { name: 'Cream',    card: '#fff8e7', text: '#3b2f1e' },
+    { name: 'Pink',     card: '#ffe4ec', text: '#5a1f33' },
+    { name: 'Sky',      card: '#e3f2fd', text: '#0d3b66' },
+    { name: 'Mint',     card: '#e6f7ef', text: '#14532d' },
+    { name: 'Lavender', card: '#efe7ff', text: '#3b1f6b' },
+    { name: 'Yellow',   card: '#fff3c4', text: '#5c4400' },
+    { name: 'Navy',     card: '#1e2a4a', text: '#ffffff' },
+    { name: 'Maroon',   card: '#5a1a2a', text: '#ffffff' },
+    { name: 'Green',    card: '#1f3d2b', text: '#ffffff' },
+    { name: 'Charcoal', card: '#222831', text: '#ffffff' },
+    { name: 'Black',    card: '#000000', text: '#ffffff' }
+  ];
+
+  var TEXT_COLORS = [
+    { name: 'Black',  value: '#222222' },
+    { name: 'White',  value: '#ffffff' },
+    { name: 'Navy',   value: '#0d3b66' },
+    { name: 'Maroon', value: '#6b1d2f' },
+    { name: 'Green',  value: '#14532d' },
+    { name: 'Brown',  value: '#4a3520' },
+    { name: 'Gold',   value: '#b8860b' }
+  ];
+
+  var ACCENT_COLORS = [
+    { name: 'Black',  value: '#222222' },
+    { name: 'Blue',   value: '#1a73e8' },
+    { name: 'Navy',   value: '#1e2a4a' },
+    { name: 'Red',    value: '#c62828' },
+    { name: 'Maroon', value: '#7b1e3a' },
+    { name: 'Green',  value: '#2e7d32' },
+    { name: 'Purple', value: '#6a1b9a' },
+    { name: 'Orange', value: '#ef6c00' },
+    { name: 'Pink',   value: '#d81b60' },
+    { name: 'Gold',   value: '#c99700' }
+  ];
+
+  var ICONS = [
+    '👋', '🙏', '🎉', '🎊', '⭐', '❤️', '🏆', '👷',
+    '🛠️', '🙌', '🤝', '🎄', '🎂', '🎈', '🌸', '☀️',
+    '✝️', '📖', '🎵', '🍽️', '🎓', '💐', '🕊️', '🌟'
+  ];
+
+  var FONTS = [
+    { name: 'Default',          css: 'Arial, Helvetica, sans-serif',       label: 'Plain' },
+    { name: 'Poppins',          css: "'Poppins', sans-serif",             label: 'Modern' },
+    { name: 'Montserrat',       css: "'Montserrat', sans-serif",          label: 'Bold' },
+    { name: 'Playfair Display', css: "'Playfair Display', serif",         label: 'Elegant' },
+    { name: 'Merriweather',     css: "'Merriweather', serif",             label: 'Classic' },
+    { name: 'Cinzel',           css: "'Cinzel', serif",                   label: 'Formal' },
+    { name: 'Bebas Neue',       css: "'Bebas Neue', sans-serif",          label: 'Tall' },
+    { name: 'Baloo 2',          css: "'Baloo 2', sans-serif",             label: 'Friendly' },
+    { name: 'Comic Neue',       css: "'Comic Neue', sans-serif",          label: 'Playful' },
+    { name: 'Pacifico',         css: "'Pacifico', cursive",               label: 'Fun' },
+    { name: 'Dancing Script',   css: "'Dancing Script', cursive",         label: 'Handwritten' },
+    { name: 'Great Vibes',      css: "'Great Vibes', cursive",            label: 'Fancy' }
+  ];
+
+  var DEFAULT_LOOK = {
+    background: '#f4f6f8',
+    backgroundImage: '',
+    overlay: 35,
+    accentColor: '#222222',
+    cardColor: '#ffffff',
+    textColor: '#222222',
+    cardImage: '',
+    cardFade: 70,
+    icon: '👋',
+    iconImage: '',
+    titleFont: 'Default'
+  };
 
 
   // =========================================
@@ -765,7 +1098,7 @@
   function normalize(text) {
     return String(text || '')
       .normalize('NFD')
-      .replace(/[̀-ͯ]/g, '')
+      .replace(/[\u0300-\u036f]/g, '')
       .trim()
       .toLowerCase()
       .replace(/\s+/g, ' ');
@@ -801,26 +1134,92 @@
   // =========================================
 
   function applySettings(s) {
+    var root = document.documentElement;
+
     $('eventName').textContent = s.eventName || 'Event Attendance';
     $('welcomeText').textContent = s.welcomeMessage || '';
 
+    // ---- Page background ----
     document.body.style.background = s.background || '#f4f6f8';
 
     var layer = $('bgLayer');
     if (s.backgroundImage) {
       var o = (Number(s.overlay) || 0) / 100;
       layer.style.backgroundImage =
-        'linear-gradient(rgba(0,0,0,' + o + '), rgba(0,0,0,' + o + ')), ' +
-        'url("' + String(s.backgroundImage).replace(/"/g, '%22') + '")';
+        'linear-gradient(rgba(0,0,0,' + o + '), rgba(0,0,0,' + o + ')), ' + cssUrl(s.backgroundImage);
       layer.classList.remove('hidden');
     } else {
       layer.style.backgroundImage = '';
       layer.classList.add('hidden');
     }
 
+    // ---- Buttons ----
     var accent = s.accentColor || '#222222';
-    document.documentElement.style.setProperty('--accent', accent);
-    document.documentElement.style.setProperty('--accent-text', readableTextColor(accent));
+    root.style.setProperty('--accent', accent);
+    root.style.setProperty('--accent-text', readableTextColor(accent));
+
+    // ---- Welcome card ----
+    var cardColor = s.cardColor || '#ffffff';
+    var textColor = s.textColor || '#222222';
+    var lightText = readableTextColor(textColor) === '#111111'; // text is light
+    var card = document.querySelector('.container');
+
+    card.style.backgroundColor = cardColor;
+
+    if (s.cardImage) {
+      var fade = (Number(s.cardFade) || 0) / 100;
+      var tint = hexToRgba(cardColor, fade);
+      card.style.backgroundImage =
+        'linear-gradient(' + tint + ', ' + tint + '), ' + cssUrl(s.cardImage);
+    } else {
+      card.style.backgroundImage = '';
+    }
+
+    root.style.setProperty('--card-text', textColor);
+    root.style.setProperty('--tile-bg',
+      lightText
+        ? (s.cardImage ? 'rgba(0,0,0,0.35)' : 'rgba(255,255,255,0.14)')
+        : (s.cardImage ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.05)'));
+
+    // ---- Icon / logo ----
+    var logo = $('eventLogo');
+    logo.innerHTML = '';
+    if (s.iconImage) {
+      var img = document.createElement('img');
+      img.className = 'logo-img';
+      img.alt = '';
+      img.src = s.iconImage;
+      logo.appendChild(img);
+      logo.classList.remove('hidden');
+    } else if (s.icon === 'none') {
+      logo.classList.add('hidden');
+    } else {
+      logo.textContent = s.icon || '👋';
+      logo.classList.remove('hidden');
+    }
+
+    // ---- Title font ----
+    root.style.setProperty('--title-font', fontCss(s.titleFont));
+  }
+
+  function cssUrl(url) {
+    return 'url("' + String(url).replace(/"/g, '%22') + '")';
+  }
+
+  function hexToRgba(hex, alpha) {
+    var h = String(hex).replace('#', '');
+    if (h.length === 3) h = h.split('').map(function(c) { return c + c; }).join('');
+    return 'rgba(' +
+      parseInt(h.substr(0, 2), 16) + ',' +
+      parseInt(h.substr(2, 2), 16) + ',' +
+      parseInt(h.substr(4, 2), 16) + ',' + alpha + ')';
+  }
+
+  function fontCss(name) {
+    for (var i = 0; i < FONTS.length; i++) {
+      if (FONTS[i].name === name) return FONTS[i].css;
+    }
+    return FONTS[0].css;
   }
 
   // White text on dark buttons, black text on light buttons.
@@ -844,7 +1243,7 @@
       screen.classList.remove('active');
     });
     $(screenId).classList.add('active');
-    $('gearButton').classList.toggle('hidden', screenId !== 'homeScreen');
+    $('gearButton').classList.toggle('hidden', screenId !== 'homeScreen' || previewing);
     window.scrollTo(0, 0);
   }
 
@@ -1315,45 +1714,107 @@
   // EVENT SETTINGS
   // =========================================
 
+  var previewing = false;
+
+  function tileHtml(cls, attrs, style, inner, title) {
+    return '<button type="button" class="tile ' + cls + '" ' + attrs +
+      (style ? ' style="' + escapeHtml(style) + '"' : '') +
+      (title ? ' title="' + escapeHtml(title) + '"' : '') + '>' + inner + '</button>';
+  }
+
   function setupAdminForm() {
-    var swatchHtml = '';
-    THEMES.forEach(function(theme) {
-      swatchHtml +=
-        '<button type="button" class="swatch" title="' + escapeHtml(theme.name) + '" ' +
-        'data-bg="' + escapeHtml(theme.value) + '" style="background:' + escapeHtml(theme.value) + '"></button>';
-    });
-    $('swatches').innerHTML = swatchHtml;
+    // ---- build the tile grids ----
+    $('iconGrid').innerHTML = ICONS.map(function(icon) {
+      return tileHtml('', 'data-icon="' + escapeHtml(icon) + '"', '', escapeHtml(icon));
+    }).join('');
 
-    $('swatches').addEventListener('click', function(e) {
-      var sw = e.target.closest('.swatch');
-      if (!sw || !draft) return;
-      draft.background = sw.getAttribute('data-bg');
-      refreshAdminPreview();
-    });
+    $('cardColorGrid').innerHTML = CARD_COLORS.map(function(c, i) {
+      return tileHtml('', 'data-card="' + i + '"',
+        'background:' + c.card + ';color:' + c.text, escapeHtml(c.name));
+    }).join('');
 
-    $('adminCustomColor').addEventListener('input', function() {
+    $('textColorGrid').innerHTML = TEXT_COLORS.map(function(c) {
+      return tileHtml('', 'data-text="' + c.value + '"',
+        'background:' + c.value + ';color:' + readableTextColor(c.value), escapeHtml(c.name));
+    }).join('');
+
+    $('accentGrid').innerHTML = ACCENT_COLORS.map(function(c) {
+      return tileHtml('', 'data-accent="' + c.value + '"',
+        'background:' + c.value + ';color:' + readableTextColor(c.value), escapeHtml(c.name));
+    }).join('');
+
+    $('swatches').innerHTML = THEMES.map(function(t) {
+      return '<button type="button" class="swatch" title="' + escapeHtml(t.name) + '" ' +
+        'data-bg="' + escapeHtml(t.value) + '" style="background:' + escapeHtml(t.value) + '"></button>';
+    }).join('');
+
+    renderFontTiles();
+
+    // ---- one click handler for all tiles ----
+    $('adminForm').addEventListener('click', function(e) {
       if (!draft) return;
-      draft.background = this.value;
+      var t = e.target.closest('[data-icon],[data-card],[data-text],[data-accent],[data-font],[data-bg]');
+      if (!t) return;
+
+      if (t.hasAttribute('data-icon')) {
+        setIcon(t.getAttribute('data-icon'));
+        return;
+      }
+      if (t.hasAttribute('data-card')) {
+        var c = CARD_COLORS[Number(t.getAttribute('data-card'))];
+        draft.cardColor = c.card;
+        draft.textColor = c.text;
+      }
+      if (t.hasAttribute('data-text'))   draft.textColor = t.getAttribute('data-text');
+      if (t.hasAttribute('data-accent')) draft.accentColor = t.getAttribute('data-accent');
+      if (t.hasAttribute('data-font'))   draft.titleFont = t.getAttribute('data-font');
+      if (t.hasAttribute('data-bg'))     draft.background = t.getAttribute('data-bg');
       refreshAdminPreview();
     });
 
+    // ---- text and sliders ----
     $('adminEventName').addEventListener('input', function() {
-      if (!draft) return;
       draft.eventName = this.value;
       applySettings(draft);
+      renderFontTiles();
+      markSelected();
     });
 
     $('adminWelcome').addEventListener('input', function() {
-      if (!draft) return;
       draft.welcomeMessage = this.value;
       applySettings(draft);
     });
 
+    $('adminCardColor').addEventListener('input', function() {
+      draft.cardColor = this.value;
+      draft.textColor = readableTextColor(this.value) === '#111111' ? '#222222' : '#ffffff';
+      refreshAdminPreview();
+    });
+
+    $('adminCustomColor').addEventListener('input', function() {
+      draft.background = this.value;
+      refreshAdminPreview();
+    });
+
+    $('adminAccent').addEventListener('input', function() {
+      draft.accentColor = this.value;
+      refreshAdminPreview();
+    });
+
+    $('adminOverlay').addEventListener('input', function() {
+      draft.overlay = Number(this.value);
+      applySettings(draft);
+    });
+
+    $('adminCardFade').addEventListener('input', function() {
+      draft.cardFade = Number(this.value);
+      applySettings(draft);
+    });
+
     $('adminImageUrl').addEventListener('change', function() {
-      if (!draft) return;
       var url = this.value.trim();
       if (url && !/^https:\/\/[^\s"'()<>\\]+$/.test(url)) {
-        showMessage('adminMessage', 'The image link must start with https:// and contain no spaces.', 'error');
+        showMessage('adminMessage', 'The picture link must start with https:// and contain no spaces.', 'error');
         return;
       }
       clearMessage('adminMessage');
@@ -1361,22 +1822,46 @@
       refreshAdminPreview();
     });
 
-    $('adminOverlay').addEventListener('input', function() {
-      if (!draft) return;
-      draft.overlay = Number(this.value);
-      $('overlayValue').textContent = this.value;
-      applySettings(draft);
-    });
-
-    $('adminAccent').addEventListener('input', function() {
-      if (!draft) return;
-      draft.accentColor = this.value;
-      applySettings(draft);
-    });
-
+    // ---- photo pickers ----
     $('adminImageFile').addEventListener('change', function() {
-      var file = this.files && this.files[0];
-      if (file) uploadImage(file);
+      pickPhoto(this, 'backgroundImage', 1920, 'jpeg');
+    });
+    $('cardImageFile').addEventListener('change', function() {
+      pickPhoto(this, 'cardImage', 1200, 'jpeg');
+    });
+    $('iconFile').addEventListener('change', function() {
+      pickPhoto(this, 'iconImage', 400, 'png');
+    });
+  }
+
+  function renderFontTiles() {
+    var sample = (draft && draft.eventName) || SETTINGS.eventName || 'Our Event';
+    $('fontGrid').innerHTML = FONTS.map(function(f) {
+      return tileHtml('', 'data-font="' + escapeHtml(f.name) + '"', '',
+        '<span class="font-sample" style="font-family:' + escapeHtml(f.css) + '">' + escapeHtml(sample) + '</span>' +
+        '<span class="font-name">' + escapeHtml(f.label) + '</span>');
+    }).join('');
+  }
+
+  function markSelected() {
+    function mark(gridId, attr, value) {
+      $(gridId).querySelectorAll('[' + attr + ']').forEach(function(el) {
+        el.classList.toggle('selected', String(el.getAttribute(attr)).toLowerCase() === String(value).toLowerCase());
+      });
+    }
+
+    mark('iconGrid', 'data-icon', draft.iconImage ? '' : draft.icon);
+    mark('textColorGrid', 'data-text', draft.textColor);
+    mark('accentGrid', 'data-accent', draft.accentColor);
+    mark('fontGrid', 'data-font', draft.titleFont);
+
+    $('cardColorGrid').querySelectorAll('[data-card]').forEach(function(el) {
+      var c = CARD_COLORS[Number(el.getAttribute('data-card'))];
+      el.classList.toggle('selected', c.card.toLowerCase() === String(draft.cardColor).toLowerCase());
+    });
+
+    document.querySelectorAll('.swatch').forEach(function(sw) {
+      sw.classList.toggle('selected', sw.getAttribute('data-bg') === draft.background);
     });
   }
 
@@ -1392,66 +1877,88 @@
     return String(value || '').indexOf('data:') === 0;
   }
 
+  function isHex6(v) {
+    return /^#[0-9a-fA-F]{6}$/.test(String(v));
+  }
+
   function fillAdminForm() {
     $('adminEventName').value = draft.eventName || '';
     $('adminWelcome').value = draft.welcomeMessage || '';
-    // An uploaded picture is not a link, so leave the link box empty.
     $('adminImageUrl').value = isUploadedImage(draft.backgroundImage) ? '' : (draft.backgroundImage || '');
-    $('adminImageFile').value = '';
+    ['adminImageFile', 'cardImageFile', 'iconFile'].forEach(function(id) { $(id).value = ''; });
     $('adminOverlay').value = draft.overlay;
-    $('overlayValue').textContent = draft.overlay;
-    $('adminAccent').value = /^#[0-9a-fA-F]{6}$/.test(draft.accentColor) ? draft.accentColor : '#222222';
-    if (/^#[0-9a-fA-F]{6}$/.test(draft.background)) {
-      $('adminCustomColor').value = draft.background;
-    }
+    $('adminCardFade').value = draft.cardFade;
+    $('adminAccent').value = isHex6(draft.accentColor) ? draft.accentColor : '#222222';
+    $('adminCardColor').value = isHex6(draft.cardColor) ? draft.cardColor : '#ffffff';
+    if (isHex6(draft.background)) $('adminCustomColor').value = draft.background;
+    renderFontTiles();
     refreshAdminPreview();
   }
 
   function refreshAdminPreview() {
-    document.querySelectorAll('.swatch').forEach(function(sw) {
-      sw.classList.toggle('selected', sw.getAttribute('data-bg') === draft.background);
-    });
-
-    var preview = $('imagePreview');
-    if (draft.backgroundImage) {
-      preview.style.backgroundImage = 'url("' + String(draft.backgroundImage).replace(/"/g, '%22') + '")';
-      preview.classList.remove('hidden');
-    } else {
-      preview.style.backgroundImage = '';
-      preview.classList.add('hidden');
-    }
-
+    showImagePreview('imagePreview', draft.backgroundImage);
+    showImagePreview('cardImagePreview', draft.cardImage);
+    $('overlayBox').classList.toggle('hidden', !draft.backgroundImage);
+    $('cardFadeBox').classList.toggle('hidden', !draft.cardImage);
+    markSelected();
     applySettings(draft);
   }
 
-  function removeBackgroundImage() {
+  function showImagePreview(id, url) {
+    var el = $(id);
+    if (url) {
+      el.style.backgroundImage = cssUrl(url);
+      el.classList.remove('hidden');
+    } else {
+      el.style.backgroundImage = '';
+      el.classList.add('hidden');
+    }
+  }
+
+  function setIcon(icon) {
     if (!draft) return;
-    draft.backgroundImage = '';
-    $('adminImageUrl').value = '';
-    $('adminImageFile').value = '';
+    draft.icon = icon;
+    draft.iconImage = '';
+    $('iconFile').value = '';
+    refreshAdminPreview();
+  }
+
+  function removeImage(key) {
+    if (!draft) return;
+    draft[key] = '';
+    if (key === 'backgroundImage') {
+      $('adminImageUrl').value = '';
+      $('adminImageFile').value = '';
+    }
+    if (key === 'cardImage') $('cardImageFile').value = '';
     refreshAdminPreview();
   }
 
   /**
-   * Shrink the photo in the browser. It is saved together with the
-   * other settings when SAVE SETTINGS is pressed (no Google Drive).
+   * Shrink the chosen photo in the browser. It is saved together
+   * with the other settings when SAVE is pressed (no Google Drive).
    */
-  function uploadImage(file) {
+  function pickPhoto(input, key, maxWidth, format) {
+    var file = input.files && input.files[0];
+    if (!file) return;
+
     if (!/^image\/(png|jpeg|webp|gif)$/.test(file.type)) {
-      showMessage('adminMessage', 'Please choose a PNG, JPG, WEBP or GIF image.', 'error');
+      showMessage('adminMessage', 'Please choose a photo (PNG, JPG, WEBP or GIF).', 'error');
       return;
     }
 
     uploading = true;
     $('saveSettingsButton').disabled = true;
-    showLoading('adminMessage', 'Preparing image...');
+    showLoading('adminMessage', 'Getting your photo ready...');
 
-    // Try smaller sizes until the picture fits.
-    var attempts = [[1920, 0.82], [1600, 0.75], [1280, 0.7], [1024, 0.65]];
+    var LIMIT = key === 'iconImage' ? 600000 : 1900000;
+    var attempts = format === 'png'
+      ? [[maxWidth, 0], [300, 0], [200, 0]]
+      : [[maxWidth, 0.82], [Math.round(maxWidth * 0.8), 0.75], [Math.round(maxWidth * 0.6), 0.7], [800, 0.6]];
 
     (function tryNext(i) {
-      resizeImage(file, attempts[i][0], attempts[i][1], function(err, dataUrl) {
-        if (!err && dataUrl.length > 1900000 && i < attempts.length - 1) {
+      resizeImage(file, attempts[i][0], format, attempts[i][1], function(err, dataUrl) {
+        if (!err && dataUrl.length > LIMIT && i < attempts.length - 1) {
           tryNext(i + 1);
           return;
         }
@@ -1463,47 +1970,82 @@
           showMessage('adminMessage', err, 'error');
           return;
         }
-
-        if (dataUrl.length > 1900000) {
-          showMessage('adminMessage', 'That picture is too large. Please choose a smaller one.', 'error');
+        if (dataUrl.length > LIMIT) {
+          showMessage('adminMessage', 'That photo is too big. Please choose a smaller one.', 'error');
           return;
         }
 
-        draft.backgroundImage = dataUrl;
-        $('adminImageUrl').value = '';
+        draft[key] = dataUrl;
+        if (key === 'backgroundImage') $('adminImageUrl').value = '';
         refreshAdminPreview();
-        showMessage('adminMessage', 'Picture ready. Press SAVE SETTINGS to use it.', 'success');
+        showMessage('adminMessage', 'Photo added! Press 👀 PREVIEW to see it, or ✅ SAVE to keep it.', 'success');
       });
     })(0);
   }
 
-  function resizeImage(file, maxWidth, quality, callback) {
+  function resizeImage(file, maxWidth, format, quality, callback) {
     var reader = new FileReader();
     reader.onerror = function() { callback('Unable to read that file.'); };
     reader.onload = function(e) {
       var img = new Image();
-      img.onerror = function() { callback('That file does not look like an image.'); };
+      img.onerror = function() { callback('That file does not look like a photo.'); };
       img.onload = function() {
         var scale = Math.min(1, maxWidth / img.width);
         var canvas = document.createElement('canvas');
-        canvas.width = Math.round(img.width * scale);
-        canvas.height = Math.round(img.height * scale);
+        canvas.width = Math.max(1, Math.round(img.width * scale));
+        canvas.height = Math.max(1, Math.round(img.height * scale));
         var ctx = canvas.getContext('2d');
-        ctx.fillStyle = '#ffffff'; // transparent PNGs get a white backing
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        if (format !== 'png') {
+          ctx.fillStyle = '#ffffff'; // JPG has no see-through parts
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        callback(null, canvas.toDataURL('image/jpeg', quality));
+        callback(null, format === 'png'
+          ? canvas.toDataURL('image/png')
+          : canvas.toDataURL('image/jpeg', quality));
       };
       img.src = e.target.result;
     };
     reader.readAsDataURL(file);
   }
 
+  function resetLook() {
+    if (!draft) return;
+    if (!confirm('Go back to the plain original look? (The event name and message stay.)')) return;
+    Object.keys(DEFAULT_LOOK).forEach(function(k) { draft[k] = DEFAULT_LOOK[k]; });
+    fillAdminForm();
+    showMessage('adminMessage', 'Original look restored. Press ✅ SAVE to keep it.', 'info');
+  }
+
+  // ---- Preview ----
+
+  function previewHome() {
+    if (!draft) return;
+    previewing = true;
+    document.documentElement.classList.add('previewing');
+    $('previewBar').classList.remove('hidden');
+    showScreen('homeScreen');
+  }
+
+  function backToEditing() {
+    previewing = false;
+    document.documentElement.classList.remove('previewing');
+    $('previewBar').classList.add('hidden');
+    showScreen('adminScreen');
+  }
+
+  function saveFromPreview() {
+    backToEditing();
+    saveAdminSettings();
+  }
+
+  // ---- Save / cancel ----
+
   function saveAdminSettings() {
     if (!draft || uploading) return;
 
     if (!String(draft.eventName || '').trim()) {
-      showMessage('adminMessage', 'Please enter the event name.', 'error');
+      showMessage('adminMessage', 'Please type the event name (step 1).', 'error');
       return;
     }
 
@@ -1511,28 +2053,29 @@
     button.disabled = true;
     button.textContent = 'SAVING...';
     showLoading('adminMessage', 'Saving...');
+    $('adminMessage').scrollIntoView({ behavior: 'smooth', block: 'center' });
 
     google.script.run
       .withSuccessHandler(function(saved) {
         button.disabled = false;
-        button.textContent = 'SAVE SETTINGS';
+        button.textContent = '✅ SAVE';
         SETTINGS = saved;
         draft = JSON.parse(JSON.stringify(saved));
         applySettings(SETTINGS);
         showMessage('adminMessage',
-          'Saved! Everyone opening the attendance page will now see these settings.',
+          'Saved! 🎉 Everyone opening the attendance page will now see the new look.',
           'success');
       })
       .withFailureHandler(function(error) {
         button.disabled = false;
-        button.textContent = 'SAVE SETTINGS';
-        showMessage('adminMessage', errorText(error, 'Unable to save settings.'), 'error');
+        button.textContent = '✅ SAVE';
+        showMessage('adminMessage', errorText(error, 'Unable to save. Please try again.'), 'error');
       })
       .saveSettings(draft);
   }
 
   function cancelAdmin() {
-    // Undo any unsaved preview changes.
+    // Undo any unsaved changes.
     applySettings(SETTINGS);
     draft = null;
     showHome();
