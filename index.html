@@ -447,6 +447,20 @@
 
     .previewing .app { pointer-events: none; }
 
+    /* Name box sizes */
+    .container input.name-box {
+      font-size: var(--name-font, 22px);
+      padding: var(--name-pad, 20px);
+      padding-right: calc(var(--name-pad, 20px) + 40px);
+      border-width: 2px;
+      border-radius: 14px;
+    }
+    .container .search-box .search-icon { font-size: calc(var(--name-font, 22px) + 2px); right: 18px; }
+    .size-big .person { font-size: 20px; padding: 14px 16px; }
+    .size-huge .person { font-size: 24px; padding: 16px 18px; }
+    .size-huge .avatar { flex-basis: 50px; height: 50px; font-size: 18px; }
+    #homeSearchBox { margin-top: 10px; }
+
     /* What to show */
     .tile-grid.audience-grid { grid-template-columns: 1fr 1fr; max-width: 520px; }
     .big-choice { flex-direction: column; gap: 4px; min-height: 120px; font-size: 18px; }
@@ -683,6 +697,18 @@
         Welcome! Please select an option below.
       </div>
 
+      <!-- "Just a name box" home style -->
+      <div id="homeSearchBox" class="hidden">
+        <div class="search-box">
+          <input type="text" id="homeSearchInput" class="name-box" data-ph="homeSearchPlaceholder"
+                 placeholder="Type your name here" autocomplete="off">
+          <span class="search-icon">🔍</span>
+        </div>
+        <div id="homeSearchResults"></div>
+        <button class="secondary-button" id="homeRegisterButton" onclick="startRegistrationFromHome()"
+                data-t="homeRegisterButton">First time here? Register as new attendee</button>
+      </div>
+
       <button class="choice-button" id="newChoice" onclick="showNewAttendee()">
         <span class="choice-icon" id="newChoiceIcon">🆕</span>
         <span class="choice-title" id="newChoiceTitle">NEW ATTENDEE</span>
@@ -763,7 +789,7 @@
       <div class="subtitle" data-t="memSubtitle">Start typing your name, then tap it to check in.</div>
 
       <div class="search-box">
-        <input type="text" id="searchInput" data-ph="memPlaceholder" placeholder="Type your first or last name" autocomplete="off">
+        <input type="text" id="searchInput" class="name-box" data-ph="memPlaceholder" placeholder="Type your first or last name" autocomplete="off">
         <span class="search-icon">🔍</span>
       </div>
 
@@ -838,8 +864,25 @@
 
         <!-- 2. WHAT TO SHOW -->
         <div class="step-title"><span class="step-number">2</span> What to show</div>
-        <div class="step-help">Is this event for everyone, or for members only?</div>
 
+        <label>Home screen style</label>
+        <div class="tile-grid audience-grid" id="homeStyleGrid">
+          <button type="button" class="tile big-choice" data-homestyle="buttons">
+            <span class="big-emoji">🔘</span>Two buttons<small>"New attendee" and "Members"</small>
+          </button>
+          <button type="button" class="tile big-choice" data-homestyle="search">
+            <span class="big-emoji">🔍</span>Just a name box<small>People type their name right away</small>
+          </button>
+        </div>
+
+        <label>Name box size</label>
+        <div class="tile-grid text-grid" id="searchSizeGrid">
+          <button type="button" class="tile" data-searchsize="normal" style="font-size:13px">Normal</button>
+          <button type="button" class="tile" data-searchsize="big" style="font-size:17px">Big</button>
+          <button type="button" class="tile" data-searchsize="huge" style="font-size:22px">Huge</button>
+        </div>
+
+        <label>Who can check in?</label>
         <div class="tile-grid audience-grid" id="audienceGrid">
           <button type="button" class="tile big-choice" data-audience="all">
             <span class="big-emoji">👥</span>Everyone<small>Members and new people</small>
@@ -1128,7 +1171,9 @@
     showNewButton: true,
     showMemberButton: true,
     showSearchRegister: true,
-    showPresentBadge: true
+    showPresentBadge: true,
+    homeStyle: 'buttons',
+    searchSize: 'big'
   };
 
   try {
@@ -1264,6 +1309,13 @@
   // =========================================
 
   var TEXT_GROUPS = [
+    {
+      page: 'Home screen (name box style)', screen: 'homeScreen', icon: '🏠',
+      items: [
+        ['homeSearchPlaceholder', 'Grey hint inside the name box', 'Type your name here'],
+        ['homeRegisterButton',    'Button for new people',         'First time here? Register as new attendee']
+      ]
+    },
     {
       page: 'New attendee page', screen: 'newNameScreen', icon: '🆕',
       items: [
@@ -1405,15 +1457,17 @@
 
     // Live suggestions while typing
     $('searchInput').addEventListener('input', renderSearchSuggestions);
+    $('homeSearchInput').addEventListener('input', renderHomeSuggestions);
     $('newNameCheck').addEventListener('input', renderNewNameSuggestions);
 
-    $('searchInput').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') {
-        var first = $('searchResults').querySelector('.person');
-        if (first && $('searchResults').querySelectorAll('.person').length === 1) {
-          first.click();
+    // Enter checks in when exactly one name is showing.
+    [['searchInput', 'searchResults'], ['homeSearchInput', 'homeSearchResults']].forEach(function(pair) {
+      $(pair[0]).addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          var rows = $(pair[1]).querySelectorAll('.person');
+          if (rows.length === 1) rows[0].click();
         }
-      }
+      });
     });
 
     $('newNameCheck').addEventListener('keydown', function(e) {
@@ -1421,7 +1475,7 @@
     });
 
     // One click handler for every list of names
-    ['searchResults', 'newNameSuggestions', 'matchList'].forEach(function(id) {
+    ['searchResults', 'homeSearchResults', 'newNameSuggestions', 'matchList'].forEach(function(id) {
       $(id).addEventListener('click', function(e) {
         var row = e.target.closest('.person');
         if (row) {
@@ -1433,6 +1487,7 @@
     setupAdminForm();
 
     // Load the name list in the background so suggestions are instant.
+    prepareHomeSearch();
     loadDirectory();
   });
 
@@ -1583,6 +1638,23 @@
     $('memberChoice').classList.toggle('hidden', !isShown(s, 'showMemberButton'));
     $('searchRegisterButton').classList.toggle('hidden', !isShown(s, 'showSearchRegister'));
 
+    // ---- Home screen style ----
+    var searchHome = s.homeStyle === 'search';
+    $('homeSearchBox').classList.toggle('hidden', !searchHome);
+    $('homeRegisterButton').classList.toggle('hidden', !registrationOpen(s));
+    if (searchHome) {
+      $('newChoice').classList.add('hidden');
+      $('memberChoice').classList.add('hidden');
+    }
+
+    var size = s.searchSize || 'big';
+    var sizes = { normal: ['17px', '15px'], big: ['24px', '20px'], huge: ['32px', '26px'] };
+    root.style.setProperty('--name-font', (sizes[size] || sizes.big)[0]);
+    root.style.setProperty('--name-pad', (sizes[size] || sizes.big)[1]);
+    ['normal', 'big', 'huge'].forEach(function(z) {
+      c.classList.toggle('size-' + z, size === z);
+    });
+
     // ---- Home screen buttons ----
     applyChoice('new', s.newTitle || 'NEW ATTENDEE', s.newDesc, s.newIcon || '🆕');
     applyChoice('member', s.memberTitle || 'MEMBERS', s.memberDesc, s.memberIcon || '👤');
@@ -1682,6 +1754,19 @@
     clearForms();
     setBusy(false);
     showScreen('homeScreen');
+    prepareHomeSearch();
+  }
+
+  /** In "name box" style, refresh names and put the cursor in the box. */
+  function prepareHomeSearch() {
+    if (current().homeStyle !== 'search' || previewing) return;
+    loadDirectory(renderHomeSuggestions);
+    setTimeout(function() { $('homeSearchInput').focus(); }, 100);
+  }
+
+  function startRegistrationFromHome() {
+    if (!registrationOpen(SETTINGS)) return;
+    goToRegistration($('homeSearchInput').value.trim());
   }
 
 
@@ -1816,8 +1901,16 @@
   }
 
   function renderSearchSuggestions() {
-    var term = $('searchInput').value;
-    var box = $('searchResults');
+    renderNameResults('searchInput', 'searchResults', isShown(current(), 'showSearchRegister'));
+  }
+
+  function renderHomeSuggestions() {
+    renderNameResults('homeSearchInput', 'homeSearchResults', registrationOpen(current()));
+  }
+
+  function renderNameResults(inputId, resultsId, canRegister) {
+    var term = $(inputId).value;
+    var box = $(resultsId);
 
     if (!term.trim()) {
       box.innerHTML = '<div class="hint">' + escapeHtml(T('memHint')) + '</div>';
@@ -1825,7 +1918,7 @@
     }
 
     if (!directory) {
-      showLoading('searchResults', 'Loading names...');
+      showLoading(resultsId, 'Loading names...');
       return; // re-rendered when the directory finishes loading
     }
 
@@ -1835,7 +1928,7 @@
     if (result.total === 0) {
       box.innerHTML =
         '<div class="message warning">' +
-        escapeHtml(T(isShown(current(), 'showSearchRegister') ? 'memNotFound' : 'memNotFoundClosed')) + '</div>';
+        escapeHtml(T(canRegister ? 'memNotFound' : 'memNotFoundClosed')) + '</div>';
       return;
     }
 
@@ -2118,13 +2211,13 @@
   // =========================================
 
   function clearForms() {
-    ['newNameCheck', 'fullName', 'contact', 'address', 'invitedBy', 'searchInput']
+    ['newNameCheck', 'fullName', 'contact', 'address', 'invitedBy', 'searchInput', 'homeSearchInput']
       .forEach(function(id) {
         var el = $(id);
         if (el) el.value = '';
       });
 
-    ['newNameMessage', 'newNameSuggestions', 'registrationMessage', 'searchResults', 'matchList', 'matchMessage']
+    ['newNameMessage', 'newNameSuggestions', 'registrationMessage', 'searchResults', 'homeSearchResults', 'matchList', 'matchMessage']
       .forEach(clearMessage);
 
     var checkButton = $('checkNewNameButton');
@@ -2206,8 +2299,18 @@
       if (!draft) return;
       var t = e.target.closest('[data-icon],[data-card],[data-text],[data-accent],[data-font],[data-bg],' +
                                '[data-choiceicon],[data-btncolor],[data-btntext],[data-btnfont],' +
-                               '[data-pos],[data-width],[data-talign],[data-balign]');
+                               '[data-pos],[data-width],[data-talign],[data-balign],' +
+                               '[data-homestyle],[data-searchsize]');
       if (!t) return;
+
+      if (t.hasAttribute('data-homestyle')) {
+        draft.homeStyle = t.getAttribute('data-homestyle');
+        if (draft.homeStyle === 'buttons' &&
+            !isShown(draft, 'showNewButton') && !isShown(draft, 'showMemberButton')) {
+          draft.showMemberButton = true;
+        }
+      }
+      if (t.hasAttribute('data-searchsize')) draft.searchSize = t.getAttribute('data-searchsize');
 
       if (t.hasAttribute('data-pos'))    draft.cardPosition = t.getAttribute('data-pos');
       if (t.hasAttribute('data-width'))  draft.cardWidth = t.getAttribute('data-width');
@@ -2365,6 +2468,8 @@
     mark('newIconGrid', 'data-choiceicon', draft.newIcon);
     mark('memberIconGrid', 'data-choiceicon', draft.memberIcon);
     mark('posGrid', 'data-pos', draft.cardPosition || 'center-center');
+    mark('homeStyleGrid', 'data-homestyle', draft.homeStyle || 'buttons');
+    mark('searchSizeGrid', 'data-searchsize', draft.searchSize || 'big');
     mark('widthGrid', 'data-width', draft.cardWidth || 'normal');
     mark('textAlignGrid', 'data-talign', draft.textAlign || 'center');
     mark('buttonAlignGrid', 'data-balign', draft.buttonAlign || 'left');
@@ -2550,8 +2655,8 @@
 
   var SHOW_PARTS = [
     ['showWelcome',        'Welcome message on the home screen'],
-    ['showNewButton',      'New attendee button (home screen)'],
-    ['showMemberButton',   'Members button (home screen)'],
+    ['showNewButton',      'New attendee button / "Register" under the home name box'],
+    ['showMemberButton',   'Members button (two-buttons style only)'],
     ['showSearchRegister', '"Register as new attendee" button on the members page'],
     ['showPresentBadge',   '"Present" tag next to names already checked in']
   ];
@@ -2569,7 +2674,8 @@
       var key = row.getAttribute('data-show');
       draft[key] = !isShown(draft, key);
 
-      if (!isShown(draft, 'showNewButton') && !isShown(draft, 'showMemberButton')) {
+      if (draft.homeStyle !== 'search' &&
+          !isShown(draft, 'showNewButton') && !isShown(draft, 'showMemberButton')) {
         draft[key] = true;
         showMessage('adminMessage', 'At least one home screen button must be shown.', 'warning');
       }
