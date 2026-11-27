@@ -3,7 +3,7 @@
 <head>
   <base target="_top">
   <meta charset="utf-8">
-  <title>Event Attendance</title>
+  <title>Win TayTay Event Registration</title>
 
   <style>
     :root {
@@ -276,6 +276,14 @@
     }
 
     .hidden { display: none !important; }
+
+    /* GitHub Pages mode: show the live Google app full-screen */
+    .embed .app, .embed #bgLayer, .embed #busy { display: none !important; }
+    .embed, .embed body { height: 100%; margin: 0; }
+    #embedFrame { display: none; }
+    .embed #embedFrame { display: block; height: 100%; }
+    #embedFrame iframe { display: block; width: 100%; height: 100%; border: 0; }
+    .embed-note { max-width: 520px; margin: 60px auto; padding: 20px; text-align: center; color: #444; }
     .required { color: #c00; }
     .small-note { color: #777; font-size: 13px; margin-top: 6px; }
 
@@ -361,6 +369,25 @@
 </head>
 
 <body>
+
+<script>
+  /* =========================================================
+   * WEB APP LINK  (used only when this file is opened on GitHub)
+   *
+   * Paste your Google Apps Script web app URL between the quotes.
+   * Find it in Apps Script: Deploy → Manage deployments → Web app URL
+   * Example: 'https://script.google.com/macros/s/AKfy.../exec'
+   * ========================================================= */
+  var WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzt_kVc6d9sxWd_baT8I1rNcu-4epwMakFlYiElpV2vuRDNcEeU8ccnyH9ajVi7bl6o/exec';
+
+  // Google Apps Script pages run on googleusercontent.com.
+  // Anywhere else (GitHub Pages), this page shows the live app instead.
+  if (!/\.googleusercontent\.com$/.test(location.hostname)) {
+    document.documentElement.classList.add('embed');
+  }
+</script>
+
+<div id="embedFrame"></div>
 
 <div id="bgLayer" class="hidden"></div>
 
@@ -596,12 +623,56 @@
   </div>
 </div>
 
+<script type="application/json" id="settingsData"><?!= settingsJson ?></script>
+
 <script>
   // =========================================
   // SETTINGS (injected by the server)
   // =========================================
 
-  var SETTINGS = <?!= settingsJson ?>;
+  var IS_APPS_SCRIPT =
+    typeof google !== 'undefined' && google.script && google.script.run;
+
+  if (IS_APPS_SCRIPT) {
+    document.documentElement.classList.remove('embed');
+  } else {
+    showEmbeddedApp();
+  }
+
+  function showEmbeddedApp() {
+    document.documentElement.classList.add('embed');
+    var holder = document.getElementById('embedFrame');
+
+    if (!/^https:\/\/script\.google\.com\//.test(WEB_APP_URL)) {
+      holder.innerHTML =
+        '<div class="embed-note"><h2>Almost there!</h2>' +
+        '<p>Open this file and paste your Google Apps Script web app link ' +
+        'into <b>WEB_APP_URL</b> near the top.</p></div>';
+      return;
+    }
+
+    var frame = document.createElement('iframe');
+    frame.src = WEB_APP_URL;
+    frame.title = 'Event Registration';
+    holder.appendChild(frame);
+  }
+
+  // Settings are filled in by Apps Script. On GitHub this stays
+  // as plain text, so the defaults below are used instead.
+  var SETTINGS = {
+    eventName: 'Event Attendance',
+    welcomeMessage: 'Welcome! Please select an option below.',
+    background: '#f4f6f8',
+    backgroundImage: '',
+    overlay: 35,
+    accentColor: '#222222'
+  };
+
+  try {
+    SETTINGS = JSON.parse(document.getElementById('settingsData').textContent);
+  } catch (e) {
+    // Not running inside Apps Script – keep the defaults.
+  }
 
   var THEMES = [
     { name: 'Light gray', value: '#f4f6f8' },
@@ -640,6 +711,9 @@
   // =========================================
 
   document.addEventListener('DOMContentLoaded', function() {
+
+    // On GitHub the live app runs inside the frame, so stop here.
+    if (!IS_APPS_SCRIPT) return;
 
     applySettings(SETTINGS);
 
